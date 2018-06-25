@@ -1,0 +1,2 @@
+MFCC preprocessing done using: http://aquila-dsp.org/
+Too memory heavy for use on a microcontroller
