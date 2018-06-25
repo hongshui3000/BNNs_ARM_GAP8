@@ -5,9 +5,6 @@ models/nin.py:	Network structure configuration
 data.py		read data, data path
 util.py		BNNs configuration
 
-
-
-
 -------------------------------------------------------
 These scripts are used to train 28 sound events
 -------------------------------------------------------
@@ -26,9 +23,9 @@ The Aquila DSP library is required for the preprocessing
 
 --After generating MFCC files which are thousands of .csv files, please put them into
 
-	{BNNs Training script}/data/TrainOutF_Trunc/ <<--for Training dataset
+	{BNNs Training script PATH}/data/TrainOutF_Trunc/ <<--for Training dataset
 
-	{BNNs Training script}/data/TestOutF_Trunc/ <<--for Testing dataset
+	{BNNs Training script PATH}/data/TestOutF_Trunc/  <<--for Testing dataset
 
 Generate a filename_class.csv that contains the name of the files for training and testing dataset separately:
 {BNNs Training script}/data/TrainOutF_Trunc/filename_class_train.csv
@@ -53,8 +50,13 @@ Ex.:
 -------------------------------------------------------
 How to use
 -------------------------------------------------------
-Install PyTorch on:   https://pytorch.org/
---------Version:-----------
+-------------------------------------------------------
+Install PyTorch on:   
+-------------------------------------------------------
+
+https://pytorch.org/
+-------------------------------------------------------
+Version:
 	Python 3.6
 	PyTorch version v0.3.1. 
 	CUDA 8 
