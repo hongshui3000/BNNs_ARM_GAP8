@@ -1,8 +1,11 @@
 Files structure:
 
 main.py:	configure hyperparameter, data path, learning rate, epoch, optimizer, initialization, loss function
+
 models/nin.py:	Network structure configuration
+
 data.py		read data, data path
+
 util.py		BNNs configuration
 
 -------------------------------------------------------
