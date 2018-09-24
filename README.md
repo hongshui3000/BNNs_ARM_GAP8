@@ -1,4 +1,4 @@
-Li-Yung, Chen. Masther thesis at ETH Zurich
+Li-Yung, ChenChenChen. Masther thesis at ETH Zurich
 Topic: Implementation and Optimization of BNNs in Embedded Platform and IoT
 Folder:
 	ARM_XNOR	:
