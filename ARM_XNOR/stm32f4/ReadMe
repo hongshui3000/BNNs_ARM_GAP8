@@ -1,0 +1,17 @@
+---------------------------------------------------------
+1. Setting up
+---------------------------------------------------------
+
+Base code for compiling for the STM32F469I Discovery board
+
+Base library can be found here:
+http://www.st.com/content/st_com/en/products/embedded-software/mcus-embedded-software/stm32-embedded-software/stm32cube-embedded-software/stm32cubef4.html
+
+Windows:
+USB driver: http://www.st.com/content/st_com/en/products/embedded-software/development-tool-software/stsw-link009.html
+Compiler: https://www.iar.com/iar-embedded-workbench/
+
+Linux:
+Compiler: https://launchpad.net/gcc-arm-embedded
+Eclipse: http://www.openstm32.org/forumthread1103
+ST-Link: https://github.com/texane/stlink
