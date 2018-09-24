@@ -25,6 +25,38 @@
 #include "mfccV2.h"
 #include "float.h"
 
+/* DWT (Data Watchpoint and Trace) registers, only exists on ARM Cortex with a DWT unit */
+#define KIN1_DWT_CONTROL             (*((volatile uint32_t*)0xE0001000))
+/*!< DWT Control register */
+#define KIN1_DWT_CYCCNTENA_BIT       (1UL<<0)
+/*!< CYCCNTENA bit in DWT_CONTROL register */
+#define KIN1_DWT_CYCCNT              (*((volatile uint32_t*)0xE0001004))
+/*!< DWT Cycle Counter register */
+#define KIN1_DEMCR                   (*((volatile uint32_t*)0xE000EDFC))
+/*!< DEMCR: Debug Exception and Monitor Control Register */
+#define KIN1_TRCENA_BIT              (1UL<<24)
+/*!< Trace enable bit in DEMCR register */
+
+#define KIN1_InitCycleCounter() \
+KIN1_DEMCR |= KIN1_TRCENA_BIT
+/*!< TRCENA: Enable trace and debug block DEMCR (Debug Exception and Monitor Control Register */
+
+#define KIN1_ResetCycleCounter() \
+KIN1_DWT_CYCCNT = 0
+/*!< Reset cycle counter */
+
+#define KIN1_EnableCycleCounter() \
+KIN1_DWT_CONTROL |= KIN1_DWT_CYCCNTENA_BIT
+/*!< Enable cycle counter */
+
+#define KIN1_DisableCycleCounter() \
+KIN1_DWT_CONTROL &= ~KIN1_DWT_CYCCNTENA_BIT
+/*!< Disable cycle counter */
+
+#define KIN1_GetCycleCounter() \
+KIN1_DWT_CYCCNT
+
+
 MFCC::MFCC(int num_mfcc_features, int frame_len) //:
 		//num_mfcc_features(num_mfcc_features), frame_len(frame_len)
 		{
@@ -140,27 +172,52 @@ float ** MFCC::create_mel_fbank() {
 void MFCC::mfcc_compute(const float32_t * audio_data, float32_t* mfcc_out) {
 
 	int32_t i, j, bin;
-
+	uint32_t cycles = 0;
+//	KIN1_InitCycleCounter(); /* enable DWT hardware */
+//	KIN1_ResetCycleCounter(); /* reset cycle counter */
+//	KIN1_EnableCycleCounter(); /* start counting */
 //TensorFlow way of normalizing .wav data to (-1,1)
 	for (i = 0; i < frame_length; i++) {
 		//frame[i] = (float)audio_data[i]/(1<<15);
 		frame[i] = (float) audio_data[i];
 
 	}
+//	cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+//	KIN1_DisableCycleCounter(); /* disable counting if not used any more */
+
+
 //Fill up remaining with zeros
 //memset(&frame[frame_length], 0, sizeof(float) * (frame_length - frame_length));
 
 	for (i = 0; i < frame_length; i++) {
+		//KIN1_InitCycleCounter(); /* enable DWT hardware */
+		//KIN1_ResetCycleCounter(); /* reset cycle counter */
+		//KIN1_EnableCycleCounter(); /* start counting */
 		frame[i] *= window_func[i];
+		//cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+		//KIN1_DisableCycleCounter(); /* disable counting if not used any more */
 	}
 	/* Initialize the CFFT/CIFFT module, intFlag = 0, doBitReverse = 1 */
 	//Compute FFT
+//	KIN1_InitCycleCounter(); /* enable DWT hardware */
+//	KIN1_ResetCycleCounter(); /* reset cycle counter */
+//	KIN1_EnableCycleCounter(); /* start counting */
+
 	arm_rfft_fast_f32(rfft, frame, buffer, 0);
+
+//	cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+//	KIN1_DisableCycleCounter(); /* disable counting if not used any more */
+
 	//arm_cfft_f32(S, frame, 0, 1);
 	/* Process the data through the Complex Magniture Module for calculating the magnitude at each bin */
 	//arm_cmplx_mag_f32(frame, buffer, frame_length / 2);
 	//Convert to power spectrum
 	//frame is stored as [real0, realN/2-1, real1, im1, real2, im2, ...]
+
+//	KIN1_InitCycleCounter(); /* enable DWT hardware */
+//	KIN1_ResetCycleCounter(); /* reset cycle counter */
+//	KIN1_EnableCycleCounter(); /* start counting */
+
 	int32_t half_dim = frame_length / 2;
 	 float first_energy = buffer[0] * buffer[0], last_energy = buffer[1]
 	 * buffer[1];  // handle this special case
@@ -171,15 +228,24 @@ void MFCC::mfcc_compute(const float32_t * audio_data, float32_t* mfcc_out) {
 	 buffer[0] = first_energy;
 	 buffer[half_dim] = last_energy;
 
+//		cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+//		KIN1_DisableCycleCounter(); /* disable counting if not used any more */
 	float sqrt_data;
 	//Apply mel filterbanks
+
+
 	for (bin = 0; bin < NUM_FBANK_BINS; bin++) {
 		j = 0;
 		float mel_energy = 0;
 		int32_t first_index = fbank_filter_first[bin];
 		int32_t last_index = fbank_filter_last[bin];
 		for (i = first_index; i <= last_index; ++i) {
+//			KIN1_InitCycleCounter(); /* enable DWT hardware */
+//			KIN1_ResetCycleCounter(); /* reset cycle counter */
+//			KIN1_EnableCycleCounter(); /* start counting */
 			arm_sqrt_f32(buffer[i], &sqrt_data);
+//			cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+//			KIN1_DisableCycleCounter(); /* disable counting if not used any more */
 			mel_energy += (sqrt_data) * mel_fbank[bin][j++];
 		}
 		mel_energies[bin] = mel_energy;
@@ -194,14 +260,23 @@ void MFCC::mfcc_compute(const float32_t * audio_data, float32_t* mfcc_out) {
 //		mel_energies[bin] = logf(mel_energies[bin]);
 
 //Take DCT. Uses matrix mul.
+//	KIN1_InitCycleCounter(); /* enable DWT hardware */
+//	KIN1_ResetCycleCounter(); /* reset cycle counter */
+//	KIN1_EnableCycleCounter(); /* start counting */
 	float32_t sum;
 	for (i = 0; i < num_mfcc_bins; i++) {
 		sum = 0;
 		for (j = 0; j < NUM_FBANK_BINS; j++) {
+				//KIN1_InitCycleCounter(); /* enable DWT hardware */
+				//KIN1_ResetCycleCounter(); /* reset cycle counter */
+				//KIN1_EnableCycleCounter(); /* start counting */
 			sum += dct_matrix[i * NUM_FBANK_BINS + j] * mel_energies[j];
+				//cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+				//KIN1_DisableCycleCounter(); /* disable counting if not used any more */
 		}
 
 		mfcc_out[i] = sum;
 	}
-
+//	cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+//	KIN1_DisableCycleCounter(); /* disable counting if not used any more */
 }

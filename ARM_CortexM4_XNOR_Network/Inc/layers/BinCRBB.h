@@ -106,8 +106,11 @@ class BinCRBB_ : public Layer {
 	     int32_t padX_, int32_t padY_);
 #endif
     ~BinCRBB_();
-
+#ifdef REPOINTER
     T* forward(T *input);
+#else
+    T* forward(T *input);
+#endif
 
 };
 

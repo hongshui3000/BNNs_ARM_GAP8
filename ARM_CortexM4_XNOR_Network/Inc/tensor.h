@@ -19,13 +19,13 @@
 
 #include <cstdint>
 #include <cstddef>
-
+#include "config.h"
 /*
 
   PARAMTERS:
   Preallocated blocks of memory, modify when changing
-  network structure. Floating-point and binary blocks 
-  of memory are allocated separately. 
+  network structure. Floating-point and binary blocks
+  of memory are allocated separately.
 
 */
 
@@ -40,6 +40,7 @@ const int32_t TB_COUNT = 2;
 // Identifier for float or binary tensor
 const int T_FLOAT = 0;
 const int T_BINARY = 1;
+const int T_FIXPOINT=2;
 
 class T {
  public:
@@ -52,8 +53,20 @@ class T {
     // Type, either T_FLOAT or T_BINARY
     int32_t type;
     // Pointer to the allocated memory block
-    float *f;
+//#ifdef TestFix16
+//	int16_t *f;
+//#elif defined(TestFix32)
+//	int32_t *f;
+//#else
+	float *f;
+//#endif
     uint32_t *b;
+#ifdef TestFix16
+    uint16_t *fixp;
+#elif defined(TestFix32)
+    int32_t *fixp;
+#else
+#endif
 
     // Resize tensor
     void resize(int32_t type_, int32_t X_, int32_t Y_, int32_t Z_);

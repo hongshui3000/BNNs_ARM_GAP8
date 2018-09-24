@@ -4,14 +4,14 @@
 #include <cstdint>
 #include <cstdio>
 #include "tensor.h"
-
+#include "config.h"
 /* Basic math functions */
 int32_t max(int32_t a, int32_t b);
 int32_t min(int32_t a, int32_t b);
 float max(float a, float b);
 float min(float a, float b);
 int32_t sign(float a);
-//int32_t popcount(uint32_t x);
+#ifdef INLINEF
 inline int32_t popcount(uint32_t x){
 
     x = x - ((x >> 1) & 0x55555555);
@@ -22,6 +22,9 @@ inline int32_t popcount(uint32_t x){
     //return x & 0x0000003F;
     return (x*0x01010101)>>24;
 }
+#else
+int32_t popcount(uint32_t x);
+#endif
 /* Read data from model file */
 // 1d array of floats
 void read(float *target, const float *data, int32_t size, int32_t &pos);
@@ -35,11 +38,15 @@ void read(uint8_t *target, const uint8_t *data, int32_t size, int32_t &pos);
 void read(int16_t *target, const int16_t *data, int32_t size, int32_t &pos);
 
 void read(int32_t *target, const int32_t *data, int32_t size, int32_t &pos);
+
 // 3d array of floats
 void read(float *target, const float *data, int32_t X, 
 	  int32_t Y, int32_t Z, int32_t &pos);
 // 3d array of 16 fix point
 void read(int16_t *target, const int16_t *data, int32_t X,
+	  int32_t Y, int32_t Z, int32_t &pos);
+// 3d array of unsigneds
+void read(int32_t *target, const int32_t *data, int32_t X,
 	  int32_t Y, int32_t Z, int32_t &pos);
 
 // 3d array of unsigneds

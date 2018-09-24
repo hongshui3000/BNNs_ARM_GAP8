@@ -71,16 +71,22 @@ static void Error_Handler(void);
 
 #include <cmath>
 #include <cstdint>
-
 #include "model.h"
 #include "tensor.h"
-
 #include <cstdio>
 #include <vector>
 #include <algorithm>
 #include <functional>
 #include <memory>
-//#include <stdint.h>
+
+const int FREQ = 16000;
+const int WIN_LENGTH = 512;
+const int WIN_OVERLAP = 384;
+//const int WIN_OVERLAP = 482;
+#if defined(MFCC_PREPROCESS)||defined(MFCC_V2)
+const int MFCC_BINS = 64;
+const int IMG_WIDTH = 400;
+#endif
 #ifdef MFCC_PREPROCESS
 #include <string.h>
 #include "aquila/global.h"
@@ -89,55 +95,53 @@ static void Error_Handler(void);
 #include "aquila/transform/Mfcc.h"
 //#include "aquila/tools/TextPlot.h"
 #include "aquila/source/generator/SineGenerator.h"
+float img[MFCC_BINS][IMG_WIDTH];
 using namespace std;
 #elif defined(MFCC_V2)
 #include "stdlib.h"
 #include "mfccV2.h"
 #endif
 
-const int FREQ = 16000;
-const int WIN_LENGTH = 256;
-//const int WIN_OVERLAP = 384;
-const int WIN_OVERLAP = 226;
-#if defined(MFCC_PREPROCESS)||defined(MFCC_V2)
-const int MFCC_BINS = 64;
-const int IMG_WIDTH = 200;
-float img[MFCC_BINS][IMG_WIDTH];
 
-#else
-#endif
-const int IMG_OVERLAP = 200;
-#include "ZZZZ.dat"
-
+//#include "ZZZZ.dat"
+//#include "A_section_of_wave.dat"
+//#include "A_section_of_waveF1.dat"
+//#include "A_section_of_waveF3.dat"
+//#include "A_section_of_waveF16.dat"
+#include "A_section_of_waveF30.dat"
+//#include "A_section_of_waveF33.dat"
 #include "layers/BinConvolution.h"
 #include "layers/FirstLayer.h"
 #include "layers/LastLayer.h"
 
 //#include "defines.h"
 
-
 /* Include arm_math.h mathematic functions */
 #include "arm_const_structs.h"
 #include "arm_math.h"
 
-#ifdef MFCC_V2
-/* FFT settings */
-//#define SAMPLES                    (512)         /* 256 real party and 256 imaginary parts */
-//#define FFT_SIZE                (WIN_LENGTH / 2) /* FFT size is always the same size as we have samples, so 256 in our case */
-//float32_t Input[WIN_LENGTH]; /*!< Input buffer is always 2 * FFT_SIZE */
-//float32_t Output[FFT_SIZE]; /*!< Output buffer is always FFT_SIZE */
-#endif
 
 #ifdef TestFix16
-#include "input_fp16.dat"
-#else
-#ifdef MFCC_PREPROCESS
-
-#elif defined(MFCC_V2)
-
-#else
-#include "input.dat"
+#ifndef Testaccuracy
+//#include "input_fp16.dat"
+//#include "input_int400.dat"
+#include "1_1_f16.dat"
 #endif
+#elif defined(TestFix32)
+#ifndef Testaccuracy
+//#include "input_fp16.dat"
+//#include "input_fp32_400.dat"
+//#include "input_fp32.dat"
+#include "1_1_f32.dat"
+#endif
+#else
+#if defined(MFCC_PREPROCESS) || defined(MFCC_V2)
+#else
+
+//#include "input.dat"
+#include "1_1_F.dat"
+#endif
+//	#include "input_240.dat"
 #endif
 
 //with 8 bit signGamma and signBetaStar, which are pre-calculated
@@ -145,9 +149,27 @@ const int IMG_OVERLAP = 200;
 #ifdef data_optimized
 #ifdef with_sign_Gamma_negative
 #ifdef TestFix16
-#include "model_optimize_fp16.dat"
+//#include "model_optimize_fp16.dat"
+#ifdef TestFix16_7
+	#include "model_mymodel_16f_7_v1.dat"
+#elif defined TestFix16_8
+	#include "model_mymodel_16f.dat"
+#endif
+//#include "model_mymodel_f16_07_05.dat"
+//#include "model_mymodel_16f_07_05_7_v1.dat"
+//#include "model_mymodel_16f_07_05_7_v2.dat"
+//#include "model_mymodel_16f_07_05_7_v3.dat"
+//#include "model_mymodel_16f_07_05_7_v4.dat"
+//#include "model_mymodel_16f_7.dat"
+#elif defined(TestFix32)
+//#include "model_optimize_fp32.dat"
+//#include "model_mymodel_32f.dat"
+//#include "model_mymodel_32f_07_01.dat"
+#include "model_mymodel_32f_07_05.dat"
 #else
-#include "model_optimize.dat"
+//#include "model_optimize.dat"
+#include "model_mymodel.dat"
+//#include "model_mymodel_F_07_05.dat"
 #endif
 #else
 #include "model_optimize_without_sigGammaNeg.dat"
@@ -203,17 +225,12 @@ KIN1_DWT_CYCCNT
 //#define FLASH_ACCESS              (*((volatile uint32_t*)0x40023C10))
 /* Flash acces? 0x8000 8000 : 0x8000 0000*/
 //#define FLASH_ACCESS2              (*((volatile uint32_t*)0x40023C00))
-
 //#define FLAAA       (1UL<<3)
-
 //#define GetFlash() \
 FLASH_ACCESS2 |= FLAAA
-
 int main(void) {
 
 	HAL_Init();
-
-
 
 	/* Configure the system clock to 180 MHz */
 	SystemClock_Config();
@@ -224,10 +241,6 @@ int main(void) {
 	BSP_LED_Init(LED2);
 	BSP_LED_Init(LED1);
 
-	// Init LCD
-	//TM_LCD_Init();
-	/* Initialize ADC, PA0 is used */
-//	TM_ADC_Init(ADC1, TM_ADC_Channel_0);
 	BSP_LCD_Reset();
 
 #ifdef LCD_USED
@@ -255,7 +268,8 @@ int main(void) {
 	uint16_t i;
 
 #ifdef MFCC_PREPROCESS
-	{	int fileCount, c, winCount, winStep, frame;
+	{
+		int fileCount, c, winCount, winStep, frame;
 
 		Aquila::HammingWindow hamming(WIN_LENGTH);
 		Aquila::Mfcc MFCC(WIN_LENGTH);
@@ -264,30 +278,25 @@ int main(void) {
 		winStep = WIN_LENGTH - WIN_OVERLAP;
 		frame = 0;
 		vector<Aquila::SampleType> win(WIN_LENGTH);
-		for(j = 0; j < IMG_WIDTH*winStep; j += winStep) {
-			for(k = 0; k < WIN_LENGTH; k++) {
-				wave_amp[k] = wav_sample[j+k];
+		for (j = 0; j < IMG_WIDTH * winStep; j += winStep) {
+			for (k = 0; k < WIN_LENGTH; k++) {
+				wave_amp[k] = wav_sample[j + k];
 			}
 			Aquila::SignalSource wav_samp(wave_amp);
-			for(k = 0; k < WIN_LENGTH; k++) {
-				win[k] = hamming.sample(k)*wav_samp.sample(k);
+			for (k = 0; k < WIN_LENGTH; k++) {
+				win[k] = hamming.sample(k) * wav_samp.sample(k);
 			}
 			KIN1_InitCycleCounter(); /* enable DWT hardware */
 			KIN1_ResetCycleCounter(); /* reset cycle counter */
 			KIN1_EnableCycleCounter(); /* start counting */
-			auto spectrum = MFCC.calculate(Aquila::SignalSource(win, FREQ), MFCC_BINS);
+			auto spectrum = MFCC.calculate(Aquila::SignalSource(win, FREQ),
+					MFCC_BINS);
 			cycles = KIN1_GetCycleCounter(); /* get cycle counter */
 			KIN1_DisableCycleCounter(); /* disable counting if not used any more */
-			for(k = 0; k < MFCC_BINS; k++) {
+			for (k = 0; k < MFCC_BINS; k++) {
 				img[k][frame] = spectrum[k];
 			}
 			frame++;
-//   if(frame == IMG_WIDTH){
-//   j = j - winStep*IMG_OVERLAP;
-//   frame = 0;
-//   }
-//	cycles = KIN1_GetCycleCounter(); /* get cycle counter */
-//	KIN1_DisableCycleCounter(); /* disable counting if not used any more */
 		}
 
 		//double imin, imax;
@@ -298,84 +307,25 @@ int main(void) {
 //  KIN1_InitCycleCounter(); /* enable DWT hardware */
 //  KIN1_ResetCycleCounter(); /* reset cycle counter */
 //  KIN1_EnableCycleCounter(); /* start counting */
-		for(i = 0; i < MFCC_BINS; i++) {
-			for(j = 0; j < IMG_WIDTH; j++) {
-				if(isinf(img[i][j])) {
+		for (i = 0; i < MFCC_BINS; i++) {
+			for (j = 0; j < IMG_WIDTH; j++) {
+				if (isinf(img[i][j])) {
 					img[i][j] = 0;
 				}
 
-				imin = (img[i][j] < imin)? img[i][j]: imin;
-				imax = (img[i][j] > imax)? img[i][j]: imax;
+				imin = (img[i][j] < imin) ? img[i][j] : imin;
+				imax = (img[i][j] > imax) ? img[i][j] : imax;
 			}
 		}
 
-		for(i = 0; i < MFCC_BINS; i++) {
-			for(j = 0; j < IMG_WIDTH; j++) {
+		for (i = 0; i < MFCC_BINS; i++) {
+			for (j = 0; j < IMG_WIDTH; j++) {
 				img[i][j] = (1 - (img[i][j] - imin) / (imax - imin)) * 255.0;
 			}
 		}
 
 	}
-#elif defined(MFCC_V2)
-	//const arm_cfft_instance_f32 *S; /* ARM CFFT module */
-	int winCount, winStep,width;
-	float* frame = new float[WIN_LENGTH];
-	winStep = WIN_LENGTH - WIN_OVERLAP;
 
-	KIN1_InitCycleCounter(); /* enable DWT hardware */
-	KIN1_ResetCycleCounter(); /* reset cycle counter */
-	KIN1_EnableCycleCounter(); /* start counting */
-
-	MFCC* MFCC_init = new MFCC(MFCC_BINS, WIN_LENGTH);
-	float32_t* img_1d = new float[MFCC_BINS];
-	width = 0;
-	for (int j = 0; j < IMG_WIDTH * winStep; j += winStep) {
-		/*Read input to L1*/
-		for (i = 0; i < WIN_LENGTH; i++) {
-			frame[i] = wav_sample[j + i];
-		}
-
-		MFCC_init->mfcc_compute(frame, img_1d);
-		for (k = 0; k < MFCC_BINS; k++) {
-			img[k][width] = img_1d[k];
-		}
-		width++;
-
-	}
-
-	float imin, imax;
-
-	imin = 1e16;
-	imax = -1e16;
-
-	for(i = 0; i < MFCC_BINS; i++) {
-		for(j = 0; j < IMG_WIDTH; j++) {
-			if(isinf(img[i][j])) {
-				img[i][j] = 0;
-			}
-
-			imin = (img[i][j] < imin)? img[i][j]: imin;
-			imax = (img[i][j] > imax)? img[i][j]: imax;
-		}
-	}
-
-	for(i = 0; i < MFCC_BINS; i++) {
-		for(j = 0; j < IMG_WIDTH; j++) {
-			img[i][j] = (1 - (img[i][j] - imin) / (imax - imin)) * 255.0;
-		}
-	}
-	//delete []frame;
-	delete []img_1d;
-	delete MFCC_init;
-	cycles = KIN1_GetCycleCounter(); /* get cycle counter */
-	KIN1_DisableCycleCounter(); /* disable counting if not used any more */
-
-	/* Initialize the CFFT/CIFFT module, intFlag = 0, doBitReverse = 1 */
-//	arm_cfft_f32(S, frame, 0, 1);
-	/* Process the data through the Complex Magniture Module for calculating the magnitude at each bin */
-//	arm_cmplx_mag_f32(frame, Output, FFT_SIZE);
-	/* Process the data through the CFFT/CIFFT module */
-	//arm_cfft_f32(&S, Input);
 #endif
 
 	T *input, *output;
@@ -391,10 +341,6 @@ int main(void) {
 	Model net(1, bData, fData);
 #endif
 
-	//uint32_t *Test_var = (uint32_t*) 0x20001000;
-	//*Test_var = 16;
-	//uint32_t buf __attribute__((at(0x2000100C))) = 10;
-
 	FirstLayer(&net, 32, 3, 3, 1, 1, 1, 1, 1e-5, 1e-4);
 	BinConvolution(&net, 64, 3, 3, 2, 2, 1, 1, true, 1e-4);
 	BinConvolution(&net, 128, 3, 3, 1, 1, 1, 1, true, 1e-4);
@@ -404,12 +350,25 @@ int main(void) {
 
 	// Size of the subsection
 #ifdef TestFix16
-	const int32_t size = 80;
+	const int32_t size = 100;
 #else
 	const int32_t size = 100;
 #endif
 	int32_t pos, mfccL, mfccR, invalidL, invalidR;
 	float sum, predict_temp = 0;
+	//KIN1_InitCycleCounter(); /* enable DWT hardware */
+	//KIN1_ResetCycleCounter(); /* reset cycle counter */
+	//KIN1_EnableCycleCounter(); /* start counting */
+
+	int winStep;
+	int width;
+	float* frame = new float[WIN_LENGTH];
+	winStep = WIN_LENGTH - WIN_OVERLAP;
+
+
+	MFCC* MFCC_init = new MFCC(MFCC_BINS, WIN_LENGTH);
+	float32_t* img_1d = new float[MFCC_BINS];
+
 
 	while (1) {
 
@@ -417,33 +376,102 @@ int main(void) {
 			predict[i] = 0;
 		}
 
-#ifdef TestFix16
-		// Size of the subsection
-		for(pos = 0; pos < IMG_WIDTH; pos += size) {
-			// Pad input from the left and right
-			if(pos == 0) {
-				mfccL = 0;
-				invalidL = 0;
-			} else {
-				mfccL = pos-12;
-				invalidL = 3;
-			}
+#if defined(TestFix16)||defined(TestFix32)
+	// Size of the subsection
+	const int32_t size = 100;
+	int32_t pos, mfccL, mfccR, invalidL, invalidR;
+	for(pos = 0; pos < IMG_WIDTH; pos += size){
+		// Pad input from the left and right
+		if(pos == 0){
+			mfccL = 0;
+			invalidL = 0;
+		} else {
+			mfccL = pos-12;
+			invalidL = 3;
+		}
 
-			if(pos+size >= IMG_WIDTH) {
-				mfccR = IMG_WIDTH;
-				invalidR = 0;
-			} else {
-				mfccR = pos+size+8;
-				invalidR = 2;
-			}
+		if(pos+size >= IMG_WIDTH){
+			mfccR = IMG_WIDTH;
+			invalidR = 0;
+		} else {
+			mfccR = pos+size+8;
+			invalidR = 2;
+		}
+		printf("Input 80 \n");
+		// Read input
+		input = new T(T_FIXPOINT, MFCC_BINS, mfccR-mfccL, 1);
 
-			// Read input
-			input = new T(T_BINARY, MFCC_BINS, mfccR-mfccL, 1);
-			for(i = 0; i < MFCC_BINS; i++) {
-				for(j = mfccL; j < mfccR; j++) {
-					input->b[i*input->Y+j-mfccL] = mfcc[i][j];
+#ifdef MFCC_PREPROCESS
+			for (i = 0; i < MFCC_BINS; i++) {
+				for (j = mfccL; j < mfccR; j++) {
+					input->fixp[i * input->Y + j - mfccL] = img[i][j];
 				}
 			}
+#elif defined(MFCC_V2)
+			{
+			int winStep;
+			int width;
+			float* frame = new float[WIN_LENGTH];
+			winStep = WIN_LENGTH - WIN_OVERLAP;
+
+			KIN1_InitCycleCounter(); /* enable DWT hardware */
+			KIN1_ResetCycleCounter(); /* reset cycle counter */
+			KIN1_EnableCycleCounter(); /* start counting */
+
+			MFCC* MFCC_init = new MFCC(MFCC_BINS, WIN_LENGTH);
+			float32_t* img_1d = new float[MFCC_BINS];
+			//width = 0;
+			for (int j = mfccL; j < mfccR; j++) {
+				/*Read input to L1*/
+				for (i = 0; i < WIN_LENGTH; i++) {
+					frame[i] = wav_sample[j * winStep + i];
+				}
+
+				MFCC_init->mfcc_compute(frame, img_1d);
+				for (k = 0; k < MFCC_BINS; k++) {
+					input->fixp[k * input->Y + j - mfccL] = img_1d[k];
+				}
+				//width++;
+			}
+
+			float imin, imax;
+
+			imin = 1e16;
+			imax = -1e16;
+
+			for (i = 0; i < MFCC_BINS; i++) {
+				for (j = mfccL; j < mfccR; j++) {
+					if (isinf(input->fixp[i * input->Y + j - mfccL])) {
+						input->fixp[i * input->Y + j - mfccL] = 0;
+					}
+
+					imin = (input->f[i * input->Y + j - mfccL] < imin) ?
+					input->fixp[i * input->Y + j - mfccL] : imin;
+					imax = (input->fixp[i * input->Y + j - mfccL] > imax) ?
+					input->fixp[i * input->Y + j - mfccL] : imax;
+				}
+			}
+
+			for (i = 0; i < MFCC_BINS; i++) {
+				for (j = mfccL; j < mfccR; j++) {
+					input->fixp[i * input->Y + j - mfccL] = (1
+							- (input->fixp[i * input->Y + j - mfccL] - imin)
+							/ (imax - imin)) * 255.0;
+				}
+			}
+			delete []frame;
+			delete[] img_1d;
+			delete MFCC_init;
+			cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+			KIN1_DisableCycleCounter(); /* disable counting if not used any more */
+			}
+#else
+			for (i = 0; i < MFCC_BINS; i++) {
+				for (j = mfccL; j < mfccR; j++) {
+					input->fixp[i*input->Y+j-mfccL] = mfcc[i][j];
+				}
+			}
+#endif
 #else
 
 		for (pos = 0; pos < IMG_WIDTH; pos += size) {
@@ -466,17 +494,81 @@ int main(void) {
 
 			// Read input
 			input = new T(T_FLOAT, MFCC_BINS, mfccR - mfccL, 1);
+
+#ifdef MFCC_PREPROCESS
 			for (i = 0; i < MFCC_BINS; i++) {
 				for (j = mfccL; j < mfccR; j++) {
-#ifdef MFCC_PREPROCESS
-					input->f[i*input->Y+j-mfccL] = img[i][j];
-#elif defined(MFCC_V2)
 					input->f[i * input->Y + j - mfccL] = img[i][j];
-#else
-					input->f[i*input->Y+j-mfccL] = mfcc[i][j];
-#endif
 				}
 			}
+#elif defined(MFCC_V2)
+			{
+//			int winStep;
+//			int width;
+//			float* frame = new float[WIN_LENGTH];
+//			winStep = WIN_LENGTH - WIN_OVERLAP;
+
+
+//			MFCC* MFCC_init = new MFCC(MFCC_BINS, WIN_LENGTH);
+//			float32_t* img_1d = new float[MFCC_BINS];
+			//width = 0;
+			for (int j = mfccL; j < mfccR; j++) {
+				/*Read input to L1*/
+				for (i = 0; i < WIN_LENGTH; i++) {
+					frame[i] = wav_sample[j * winStep + i];
+				}
+
+				MFCC_init->mfcc_compute(frame, img_1d);
+				//KIN1_InitCycleCounter(); /* enable DWT hardware */
+				//KIN1_ResetCycleCounter(); /* reset cycle counter */
+				//KIN1_EnableCycleCounter(); /* start counting */
+				for (k = 0; k < MFCC_BINS; k++) {
+					input->f[k * input->Y + j - mfccL] = img_1d[k];
+				}
+				//cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+				//KIN1_DisableCycleCounter(); /* disable counting if not used any more */
+				//width++;
+			}
+
+			float imin, imax;
+
+			//imin = 1e16;
+			//imax = -1e16;
+			imin = -94.0;
+			imax = 65.0;
+			/*for (i = 0; i < MFCC_BINS; i++) {
+				for (j = mfccL; j < mfccR; j++) {
+					if (isinf(input->f[i * input->Y + j - mfccL])) {
+						input->f[i * input->Y + j - mfccL] = 0;
+					}
+
+					imin = (input->f[i * input->Y + j - mfccL] < imin) ?
+					input->f[i * input->Y + j - mfccL] : imin;
+					imax = (input->f[i * input->Y + j - mfccL] > imax) ?
+					input->f[i * input->Y + j - mfccL] : imax;
+				}
+			}*/
+
+			for (i = 0; i < MFCC_BINS; i++) {
+				for (j = mfccL; j < mfccR; j++) {
+					input->f[i * input->Y + j - mfccL] = (1
+							- (input->f[i * input->Y + j - mfccL] - imin)
+							/ (imax - imin)) * 255.0;
+				}
+			}
+
+//			delete []frame;
+//			delete[] img_1d;
+//			delete MFCC_init;
+			}
+#else
+			for (i = 0; i < MFCC_BINS; i++) {
+				for (j = mfccL; j < mfccR; j++) {
+					input->f[i*input->Y+j-mfccL] = mfcc[i][j];
+				}
+			}
+#endif
+
 #endif
 			// Forward pass
 
@@ -546,14 +638,13 @@ int main(void) {
 #endif
 		cycles = KIN1_GetCycleCounter(); /* get cycle counter */
 		KIN1_DisableCycleCounter(); /* disable counting if not used any more */
-
-//    BSP_LED_Toggle(LED1);
-//    BSP_LED_Toggle(LED2);
-//    BSP_LED_Toggle(LED3);
-//    HAL_Delay(1000);
-//    BSP_LED_Toggle(LED1);
-//    BSP_LED_Toggle(LED2);
-//    BSP_LED_Toggle(LED3);
+    BSP_LED_Toggle(LED1);
+    BSP_LED_Toggle(LED2);
+    BSP_LED_Toggle(LED3);
+    HAL_Delay(1000);
+    BSP_LED_Toggle(LED1);
+    BSP_LED_Toggle(LED2);
+    BSP_LED_Toggle(LED3);
 #ifdef LCD_USED
 //    BSP_LCD_Init();
 //    BSP_LCD_LayerDefaultInit(0, LCD_FB_START_ADDRESS);
@@ -569,7 +660,8 @@ int main(void) {
 		BSP_LCD_SetFont(&Font16);
 #endif
 	}
-
+	delete []frame;
+	delete[] img_1d;
 }
 
 /**

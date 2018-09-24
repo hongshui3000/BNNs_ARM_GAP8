@@ -30,8 +30,9 @@ int32_t sign(float a){
 
 }
 
-
-/*int32_t popcount(uint32_t x){
+#ifdef INLINEF
+#else
+int32_t popcount(uint32_t x){
 
     x = x - ((x >> 1) & 0x55555555);
     x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
@@ -39,7 +40,8 @@ int32_t sign(float a){
     x = x + (x >> 8);
     x = x + (x >> 16);
     return x & 0x0000003F;
-}*/
+}
+#endif
 
 void read(float *target, const float *data, int32_t size, int32_t &pos){
 
@@ -95,6 +97,17 @@ void read(int16_t *target, const int16_t *data, int32_t size, int32_t &pos){
 
 }
 
+void read(int32_t *target, const int32_t *data, int32_t size, int32_t &pos){
+
+    int32_t i;
+
+    for(i = 0; i < size; i++){
+	target[i] = data[pos];
+	pos++;
+    }
+
+}
+
 void read(float *target, const float *data, int32_t X,
 	  int32_t Y, int32_t Z, int32_t &pos){
     
@@ -126,6 +139,22 @@ void read(int16_t *target, const int16_t *data, int32_t X,
 	}
     }
 
+
+}
+
+void read(int32_t *target, const int32_t *data, int32_t X,
+	  int32_t Y, int32_t Z, int32_t &pos){
+
+    int32_t i, j, k;
+
+    for(i = 0; i < X; i++){
+	for(j = 0; j < Y; j++){
+	    for(k = 0; k < Z; k++){
+		target[(i*Y+j)*Z+k] = data[pos];
+		pos++;
+	    }
+	}
+    }
 
 }
 

@@ -24,40 +24,44 @@ const int32_t MAX_LAYERS = 32;
 const int32_t MAX_DEPTH = 128;
 
 #ifdef myPopcount_methode_2
-
 class Model {
  public:
 #ifdef data_optimized
+	#ifdef TestFix16
+    Model(int32_t Z_, const uint32_t *b32Data_, const uint8_t *b8Data_, const int16_t *fData_);
+	#elif defined(TestFix32)
+    Model(int32_t Z_, const uint32_t *b32Data_, const uint8_t *b8Data_, const int32_t *fData_);
+	#else
     Model(int32_t Z_, const uint32_t *b32Data_, const uint8_t *b8Data_, const float *fData_);
-#else
-#ifdef TestFix16
-    Model(int32_t Z_, const uint32_t *b32Data_, const int8_t *b8Data_, const int16_t *fData_);
+	#endif
 #else
     Model(int32_t Z_, const uint32_t *bData_, const float *fData_);
-#endif
 #endif
     ~Model();
 
     // Pointers to the paramters of the network
 #ifdef data_optimized
+	#ifdef TestFix16
+    const uint32_t *b32Data;
+    const uint8_t *b8Data;
+    const int16_t *fData;
+    int32_t b32Pos, b8Pos, fPos;
+	#elif defined(TestFix32)
+    const uint32_t *b32Data;
+    const uint8_t *b8Data;
+    const int32_t *fData;
+    int32_t b32Pos, b8Pos, fPos;
+	#else
     const uint32_t *b32Data;
     const uint8_t *b8Data;
     const float *fData;
-    // Position in the parameters array
     int32_t b32Pos, b8Pos, fPos;
-#else
-#ifdef TestFix16
-    const uint32_t *b32Data;
-    const int8_t *b8Data;
-    const int16_t *fData;
-    // Position in the parameters array
-    int32_t b32Pos, b8Pos, fPos;
+	#endif
 #else
     const uint32_t *bData;
     const float *fData;
     // Position in the parameters array
     int32_t bPos, fPos;
-#endif
 #endif
 
     // Number of output channels

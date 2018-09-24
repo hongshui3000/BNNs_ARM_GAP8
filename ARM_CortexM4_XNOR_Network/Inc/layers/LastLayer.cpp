@@ -9,6 +9,13 @@ void LastLayer(Model *net, int32_t nFilters1,
 
     int16_t *alpha1 = new int16_t[nFilters1];
     read(alpha1, net->fData, nFilters1, net->fPos);
+#elif defined(TestFix32)
+    // Binary layer
+    int32_t *bias1 = new int32_t[nFilters1];
+    read(bias1, net->fData, nFilters1, net->fPos);
+
+    int32_t *alpha1 = new int32_t[nFilters1];
+    read(alpha1, net->fData, nFilters1, net->fPos);
 #else
     // Binary layer
     float *bias1 = new float[nFilters1];
@@ -47,17 +54,31 @@ void LastLayer(Model *net, int32_t nFilters1,
 
     int16_t *beta = new int16_t[MAX_DEPTH];
     read(beta, net->fData, nFilters1, net->fPos);
+
+#elif defined(TestFix32)
+    // Batch Normalization
+    int32_t *mean = new int32_t[MAX_DEPTH];
+    read(mean, net->fData, nFilters1, net->fPos);
+
+    int32_t *std = new int32_t[MAX_DEPTH];
+    read(std, net->fData, nFilters1, net->fPos);
+
+    int32_t *gamma = new int32_t[MAX_DEPTH];
+    read(gamma, net->fData, nFilters1, net->fPos);
+
+    int32_t *beta = new int32_t[MAX_DEPTH];
+    read(beta, net->fData, nFilters1, net->fPos);
 #else
     // Batch Normalization
     float *mean = new float[MAX_DEPTH];
     read(mean, net->fData, nFilters1, net->fPos);
-    
+
     float *std = new float[MAX_DEPTH];
     read(std, net->fData, nFilters1, net->fPos);
-    
+
     float *gamma = new float[MAX_DEPTH];
     read(gamma, net->fData, nFilters1, net->fPos);
-    
+
     float *beta = new float[MAX_DEPTH];
     read(beta, net->fData, nFilters1, net->fPos);
 #endif
@@ -76,6 +97,15 @@ void LastLayer(Model *net, int32_t nFilters1,
     read(bias2, net->fData, nFilters2, net->fPos);
 
     int16_t *weight2 = new int16_t[nFilters2*net->Z];
+    for(i = 0; i < nFilters2; i++){
+	read(&(weight2[i*net->Z]), net->fData, 1, 1, net->Z, net->fPos);
+    }
+#elif defined(TestFix32)
+    // Full-precision layer
+    int32_t *bias2 = new int32_t[nFilters2];
+    read(bias2, net->fData, nFilters2, net->fPos);
+
+    int32_t *weight2 = new int32_t[nFilters2*net->Z];
     for(i = 0; i < nFilters2; i++){
 	read(&(weight2[i*net->Z]), net->fData, 1, 1, net->Z, net->fPos);
     }
@@ -118,12 +148,31 @@ LastLayer_::LastLayer_(uint32_t *weight1_, int16_t *bias1_, int16_t *alpha1_,
     beta = beta_;
 
 }
+#elif defined(TestFix32)
+LastLayer_::LastLayer_(uint32_t *weight1_, int32_t *bias1_, int32_t *alpha1_,
+		      int32_t nFilters1_, int32_t *weight2_, int32_t *bias2_,
+		      int32_t nFilters2_, int32_t *mean_, int32_t *std_,
+		      int32_t *gamma_, int32_t *beta_){
+
+    weight1 = weight1_;
+    bias1 = bias1_;
+    alpha1 = alpha1_;
+    nFilters1 = nFilters1_;
+    weight2 = weight2_;
+    bias2 = bias2_;
+    nFilters2 = nFilters2_;
+    mean = mean_;
+    std = std_;
+    gamma = gamma_;
+    beta = beta_;
+
+}
 #else
-LastLayer_::LastLayer_(uint32_t *weight1_, float *bias1_, float *alpha1_, 
+LastLayer_::LastLayer_(uint32_t *weight1_, float *bias1_, float *alpha1_,
 		      int32_t nFilters1_, float *weight2_, float *bias2_,
-		      int32_t nFilters2_, float *mean_, float *std_, 
+		      int32_t nFilters2_, float *mean_, float *std_,
 		      float *gamma_, float *beta_){
-    
+
     weight1 = weight1_;
     bias1 = bias1_;
     alpha1 = alpha1_;
@@ -150,12 +199,19 @@ LastLayer_::~LastLayer_(){
     delete[] beta;
 
 }
-
+#ifdef REPOINTER
 T* LastLayer_::forward(T* __restrict__ input){
+#else
+	T* LastLayer_::forward(T* input){
+#endif
+#ifdef LED_USED
     BSP_LED_Toggle(LED3);
+#endif
     int32_t i, j, k, kk, sum1;
 #ifdef TestFix16
-    int32_t sum2;
+    int64_t sum2;
+#elif defined(TestFix32)
+    int64_t sum2;
 #else
     float sum2;
 #endif
@@ -166,6 +222,8 @@ T* LastLayer_::forward(T* __restrict__ input){
     }
 
 #ifdef TestFix16
+    int32_t *inter = new int32_t[nFilters1];
+#elif defined(TestFix32)
     int32_t *inter = new int32_t[nFilters1];
 #else
     float *inter = new float[nFilters1];
@@ -193,39 +251,57 @@ T* LastLayer_::forward(T* __restrict__ input){
 
 
 		// Store intermediary results
-		inter[k] = max(0.0, sum1*alpha1[k]+bias1[k]);
-	#ifdef TestFix16
-		inter[k] = (((inter[k]-mean[k])*std[k]>>8)*gamma[k]>>8)+beta[k];
-	#else
-		inter[k] = (inter[k]-mean[k])*std[k]*gamma[k]+beta[k];
-	#endif
+#ifdef  TestFix16
+            inter[k] = (0 > (sum1*(int32_t)alpha1[k]+bias1[k]))? 0 : ((int32_t)sum1*(int32_t)alpha1[k] + bias1[k]);
+            //printf("alpha1[%d]: %d, bias1[%d]:%d, sum1 = %d\n",k, alpha1[k], kk, bias1[k], sum1);
+            inter[k] = (((((int32_t)(inter[k]-mean[k])*(int32_t)std[k])>>FIXSCALE)*(int32_t)gamma[k])>>FIXSCALE)+beta[k];
+            //printf("mean[%d]: %d, inter[%d]:%d, sum1 = %d\n",k, mean[k], kk, inter[k], sum1);
+
+#elif defined(TestFix32)
+            inter[k] = (0 > (sum1*(int64_t)alpha1[k]+bias1[k]))? 0 : ((int64_t)sum1*(int64_t)alpha1[k] + bias1[k]);
+            inter[k] = (((((int64_t)(inter[k]-mean[k])*(int64_t)std[k])>>FIXSCALE)*(int64_t)gamma[k])>>FIXSCALE)+beta[k];
+            //printf("mean[%d]: %d, inter[%d]:%d, sum1 = %d\n",k, mean[k], kk, inter[k], sum1);
+#else
+            inter[k] = max(0.0, sum1*alpha1[k]+bias1[k]);
+            inter[k] = (inter[k]-mean[k])*std[k]*gamma[k]+beta[k];
+            //printf("mean[%d]: %f, inter[%d]:%f, sum1 = %d\n",k, mean[k], kk, inter[k], sum1);
+
+#endif
 		k++;
 	    }while(k < nFilters1);
 
 	    // Calculate the full-point layer
 	    for(k = 0; k < nFilters2; k++){
-		sum2 = 0;
-
-		for(kk = 0; kk < nFilters1; kk++){
-	#ifdef TestFix16
-		    sum2 += (weight2[k*nFilters1+kk]*inter[kk])>>8;
-	#else
-		    sum2 += weight2[k*nFilters1+kk]*inter[kk];
-	#endif
-		}
-	#ifdef TestFix16
-		output->f[(i*output->Y+j)*output->Z+k] = (float)(sum2+bias2[k])/(float)256;
-	#else
-		output->f[(i*output->Y+j)*output->Z+k] = sum2+bias2[k];
-	#endif
-	    }
+            sum2 = 0;
+            for(kk = 0; kk < nFilters1; kk++)
+            {
+                #ifdef TestFix16
+                    sum2 += (int64_t)(weight2[k*nFilters1+kk]*(int64_t)inter[kk])>>FIXSCALE;// 2^((7+5) + 16 + 16 - 8 = 36)
+                    //printf("weight2[%d]:%d, inter[%d]:%d, sum2 = %d\n",kk, weight2[k*nFilters1+kk], kk, inter[kk], sum2);
+                #elif defined(TestFix32)
+                    sum2 += (int64_t)(weight2[k*nFilters1+kk]*(int64_t)inter[kk])>>FIXSCALE;// 2^((7+5) + 32 + 32 - 20 = 56)
+                #else
+                    sum2 += weight2[k*nFilters1+kk]*inter[kk];
+                #endif
+            }
+            #ifdef TestFix16
+                output->f[(i*output->Y+j)*output->Z+k] = ((float)(sum2+bias2[k]))/(float)FIXVALUE;
+                //printf("sum2 : %d, bias2[%d]:%d\n",sum2, k, bias2[k]);
+            #elif defined(TestFix32)
+                output->f[(i*output->Y+j)*output->Z+k] = ((float)(sum2+bias2[k]))/(float)FIXVALUE;
+                //printf("sum2 : %d, bias2[%d]:%d\n",sum2, k, bias2[k]);
+            #else
+                output->f[(i*output->Y+j)*output->Z+k] = sum2+bias2[k];
+	        #endif
+        }
 	}
     }
     delete[] inter;
     delete input;
+#ifdef LED_USED
     BSP_LED_Toggle(LED3);
-
+#endif
     return output;
-    
+
 }
 

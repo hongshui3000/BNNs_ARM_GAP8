@@ -49,10 +49,6 @@ class MFCC{
     float * create_dct_matrix(int32_t input_length, int32_t coefficient_count);
     float ** create_mel_fbank();
 
-    //static inline float InverseMelScale(float mel_freq) {
-    //  return 700.0f * (expf (mel_freq / 1127.0f) - 1.0f);
-    //}
-
   public:
     MFCC(int num_mfcc_features, int frame_len);
     ~MFCC();

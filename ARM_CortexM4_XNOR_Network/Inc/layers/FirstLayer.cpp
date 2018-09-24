@@ -1,5 +1,34 @@
 #include "FirstLayer.h"
+/* DWT (Data Watchpoint and Trace) registers, only exists on ARM Cortex with a DWT unit */
+#define KIN1_DWT_CONTROL             (*((volatile uint32_t*)0xE0001000))
+/*!< DWT Control register */
+#define KIN1_DWT_CYCCNTENA_BIT       (1UL<<0)
+/*!< CYCCNTENA bit in DWT_CONTROL register */
+#define KIN1_DWT_CYCCNT              (*((volatile uint32_t*)0xE0001004))
+/*!< DWT Cycle Counter register */
+#define KIN1_DEMCR                   (*((volatile uint32_t*)0xE000EDFC))
+/*!< DEMCR: Debug Exception and Monitor Control Register */
+#define KIN1_TRCENA_BIT              (1UL<<24)
+/*!< Trace enable bit in DEMCR register */
 
+#define KIN1_InitCycleCounter() \
+KIN1_DEMCR |= KIN1_TRCENA_BIT
+/*!< TRCENA: Enable trace and debug block DEMCR (Debug Exception and Monitor Control Register */
+
+#define KIN1_ResetCycleCounter() \
+KIN1_DWT_CYCCNT = 0
+/*!< Reset cycle counter */
+
+#define KIN1_EnableCycleCounter() \
+KIN1_DWT_CONTROL |= KIN1_DWT_CYCCNTENA_BIT
+/*!< Enable cycle counter */
+
+#define KIN1_DisableCycleCounter() \
+KIN1_DWT_CONTROL &= ~KIN1_DWT_CYCCNTENA_BIT
+/*!< Disable cycle counter */
+
+#define KIN1_GetCycleCounter() \
+KIN1_DWT_CYCCNT
 void FirstLayer(Model *net, int32_t nFilters,
 		int32_t kX, int32_t kY, int32_t dX, int32_t dY,
 		int32_t padX, int32_t padY, float eps1, float eps2){
@@ -22,6 +51,24 @@ void FirstLayer(Model *net, int32_t nFilters,
 	read(std1, net->fData, nFilters, net->fPos);
 	read(gamma1, net->fData, nFilters, net->fPos);
 	read(beta1, net->fData, nFilters, net->fPos);
+
+#elif defined(TestFix32)
+	int32_t *bias = new int32_t[nFilters];
+	read(bias, net->fData, nFilters, net->fPos);
+	int32_t *weight = new int32_t[nFilters*kX*kY*net->Z];
+	for(i = 0; i < nFilters; i++){
+		read(&(weight[i*kX*kY*net->Z]), net->fData, kX, kY, net->Z, net->fPos);
+	}
+	// Batch Normalization 1
+	int32_t *mean1 = new int32_t[nFilters];
+	int32_t *std1 = new int32_t[nFilters];
+	int32_t *gamma1 = new int32_t[nFilters];
+	int32_t *beta1 = new int32_t [nFilters];
+	read(mean1, net->fData, nFilters, net->fPos);
+	read(std1, net->fData, nFilters, net->fPos);
+	read(gamma1, net->fData, nFilters, net->fPos);
+	read(beta1, net->fData, nFilters, net->fPos);
+
 #else
 	float *bias = new float[nFilters];
 	read(bias, net->fData, nFilters, net->fPos);
@@ -49,6 +96,7 @@ void FirstLayer(Model *net, int32_t nFilters,
 	}
 #endif
 
+
 #ifdef TestFix16
 	// Batch Normalization 2
 	int16_t *mean2 = new int16_t[nFilters];
@@ -60,6 +108,17 @@ void FirstLayer(Model *net, int32_t nFilters,
 	read(std2, net->fData, nFilters, net->fPos);
 	read(gamma2, net->fData, nFilters, net->fPos);
 	read(beta2, net->fData, nFilters, net->fPos);
+#elif defined(TestFix32)
+    // Batch Normalization 2
+	int32_t *mean2 = new int32_t[nFilters];
+	int32_t *std2 = new int32_t[nFilters];
+	int32_t *gamma2 = new int32_t[nFilters];
+	int32_t *beta2 = new int32_t [nFilters];
+	read(mean2, net->fData, nFilters, net->fPos);
+	read(std2, net->fData, nFilters, net->fPos);
+	read(gamma2, net->fData, nFilters, net->fPos);
+	read(beta2, net->fData, nFilters, net->fPos);
+
 #else
 	// Batch Normalization 2
 	float *mean2 = new float[nFilters];
@@ -71,7 +130,8 @@ void FirstLayer(Model *net, int32_t nFilters,
 	read(std2, net->fData, nFilters, net->fPos);
 	read(gamma2, net->fData, nFilters, net->fPos);
 	read(beta2, net->fData, nFilters, net->fPos);
-#endif
+    #endif
+
 #if defined (data_optimized) || defined(signGamma_signBetaStar_optimized)
 #else
 	for(i = 0; i < nFilters; i++){
@@ -87,7 +147,6 @@ void FirstLayer(Model *net, int32_t nFilters,
 	net->Z = nFilters;
 
 }
-
 #ifdef TestFix16
 FirstLayer_::FirstLayer_(int16_t* weight_, int16_t *bias_, int32_t nFilters_,
 		int32_t kX_, int32_t kY_, int32_t dX_, int32_t dY_, int32_t padX_, int32_t padY_,
@@ -111,6 +170,31 @@ FirstLayer_::FirstLayer_(int16_t* weight_, int16_t *bias_, int32_t nFilters_,
 	std2 = std2_;
 	gamma2 = gamma2_;
 	beta2 = beta2_;
+
+}
+#elif defined(TestFix32)
+FirstLayer_::FirstLayer_(int32_t* weight_, int32_t *bias_, int32_t nFilters_,
+	int32_t kX_, int32_t kY_, int32_t dX_, int32_t dY_, int32_t padX_, int32_t padY_,
+	int32_t *mean1_, int32_t *std1_, int32_t *gamma1_, int32_t *beta1_,
+	int32_t *mean2_, int32_t *std2_, int32_t *gamma2_, int32_t *beta2_){
+
+weight = weight_;
+bias = bias_;
+nFilters = nFilters_;
+kX = kX_;
+kY = kY_;
+padX = padX_;
+padY = padY_;
+dX = dX_;
+dY = dY_;
+mean1 = mean1_;
+std1 = std1_;
+gamma1 = gamma1_;
+beta1 = beta1_;
+mean2 = mean2_;
+std2 = std2_;
+gamma2 = gamma2_;
+beta2 = beta2_;
 
 }
 #else
@@ -140,6 +224,7 @@ FirstLayer_::FirstLayer_(float* weight_, float *bias_, int32_t nFilters_,
 }
 
 #endif
+
 FirstLayer_::~FirstLayer_(){
 	delete[] weight;
 	delete[] bias;
@@ -153,9 +238,14 @@ FirstLayer_::~FirstLayer_(){
 	delete[] beta2;
 
 }
-
+#ifdef REPOINTER
 T* FirstLayer_::forward(T* __restrict__ input){
+#else
+T* FirstLayer_::forward(T* input){
+#endif
+#ifdef LED_USED
     BSP_LED_Toggle(LED1);
+#endif
 	int32_t i, j, k, ki, kj, kk, x0, y0, outi, outj;
 	int32_t kX2, kY2, outX, outY;
 	int32_t leftX, rightX, leftY, rightY;
@@ -164,7 +254,10 @@ T* FirstLayer_::forward(T* __restrict__ input){
 	T *output;
 #ifdef TestFix16
 	int16_t *filter;
-	int32_t sum;
+	int64_t sum;
+#elif defined(TestFix32)
+	int32_t *filter;
+	int64_t sum;
 #else
 	float *filter, sum;
 #endif
@@ -212,20 +305,31 @@ T* FirstLayer_::forward(T* __restrict__ input){
 						bb = (ki*input->Y+kj)*input->Z;
 						for(kk = 0; kk < input->Z; kk++){
 #ifdef TestFix16
-							sum += (filter[aa+kk]*input->b[bb+kk]);
+							sum += ((int32_t)filter[aa+kk]*(int32_t)input->fixp[bb+kk]);
+#elif defined(TestFix32)
+							sum += ((int64_t)filter[aa+kk]*(int64_t)input->fixp[bb+kk]);
 #else
 							sum += (filter[aa+kk]*input->f[bb+kk]);
 #endif
 						}
 					}
 				}
-
+#if defined(TestFix32)||defined(TestFix16)
+			sum = sum >> INPUTSCALE;
+#endif
 #ifdef TestFix16
 				// Batch Normalization 1
 				sum = sum + bias[k];
-				sum = ((((sum - mean1[k])*std1[k])>>8)*gamma1[k]>>8)+beta1[k];
+				sum = (((((sum - mean1[k])*std1[k])>>FIXSCALE)*gamma1[k])>>FIXSCALE)+beta1[k];
 				sum = max(0.0, sum);
-				sum = ((((sum - mean2[k])*std2[k])>>8)*gamma2[k]>>8)+beta2[k];
+				sum = (((((sum - mean2[k])*std2[k])>>FIXSCALE)*gamma2[k])>>FIXSCALE)+beta2[k];
+#elif defined(TestFix32)
+			// Batch Normalization 1
+			sum = sum + bias[k];
+			sum = (((((sum - mean1[k])*std1[k])>>FIXSCALE)*gamma1[k])>>FIXSCALE)+beta1[k];
+			sum = (0 > sum)? 0 : sum;
+			//sum = max(0, sum);
+			sum = (((((sum - mean2[k])*std2[k])>>FIXSCALE)*gamma2[k])>>FIXSCALE)+beta2[k];
 #else
 				// Batch Normalization 1
 				sum = sum + bias[k];
@@ -256,20 +360,31 @@ T* FirstLayer_::forward(T* __restrict__ input){
 					for(kk = 0; kk < input->Z; kk++)
 					{
 #ifdef TestFix16
-						sum += (filter[aa+kk]*input->b[bb+kk]);
+						sum += ((int32_t)filter[aa+kk]*(int32_t)input->fixp[bb+kk]);
+#elif defined(TestFix32)
+						sum += ((int64_t)filter[aa+kk]*(int64_t)input->fixp[bb+kk]);
 #else
 						sum += (filter[aa+kk]*input->f[bb+kk]);
 #endif
 					}
 				}
 			}
-
+#if defined(TestFix32)||defined(TestFix16)
+			sum = sum >> INPUTSCALE;
+#endif
 #ifdef TestFix16
 			// Batch Normalization 1
 			sum = sum + bias[k];
-			sum = ((((sum - mean1[k])*std1[k])>>8)*gamma1[k]>>8)+beta1[k];
+			sum = (((((sum - mean1[k])*std1[k])>>FIXSCALE)*gamma1[k])>>FIXSCALE)+beta1[k];
 			sum = max(0.0, sum);
-			sum = ((((sum - mean2[k])*std2[k])>>8)*gamma2[k]>>8)+beta2[k];
+			sum = (((((sum - mean2[k])*std2[k])>>FIXSCALE)*gamma2[k])>>FIXSCALE)+beta2[k];
+#elif defined(TestFix32)
+			// Batch Normalization 1
+			sum = sum + bias[k];
+			sum = (((((sum - mean1[k])*std1[k])>>FIXSCALE)*gamma1[k])>>FIXSCALE)+beta1[k];
+			sum = (0 > sum)? 0 : sum;
+			//sum = max(0, sum);
+			sum = (((((sum - mean2[k])*std2[k])>>FIXSCALE)*gamma2[k])>>FIXSCALE)+beta2[k];
 #else
 			// Batch Normalization 1
 			sum = sum + bias[k];
@@ -296,20 +411,31 @@ T* FirstLayer_::forward(T* __restrict__ input){
 					bb = (ki*input->Y+kj)*input->Z;
 					for(kk = 0; kk < input->Z; kk++){
 #ifdef TestFix16
-						sum += (filter[aa+kk]*input->b[bb+kk]);
+						sum += ((int32_t)filter[aa+kk]*(int32_t)input->fixp[bb+kk]);
+#elif defined(TestFix32)
+						sum += ((int64_t)filter[aa+kk]*(int64_t)input->fixp[bb+kk]);
 #else
 						sum += (filter[aa+kk]*input->f[bb+kk]);
 #endif
 					}
 				}
 			}
-
+#if defined(TestFix32)||defined(TestFix16)
+			sum = sum >> INPUTSCALE;
+#endif
 #ifdef TestFix16
 			// Batch Normalization 1
 			sum = sum + bias[k];
-			sum = ((((sum - mean1[k])*std1[k])>>8)*gamma1[k]>>8)+beta1[k];
+			sum = (((((sum - mean1[k])*std1[k])>>FIXSCALE)*gamma1[k])>>FIXSCALE)+beta1[k];
 			sum = max(0.0, sum);
-			sum = ((((sum - mean2[k])*std2[k])>>8)*gamma2[k]>>8)+beta2[k];
+			sum = (((((sum - mean2[k])*std2[k])>>FIXSCALE)*gamma2[k])>>FIXSCALE)+beta2[k];
+#elif defined(TestFix32)
+			// Batch Normalization 1
+			sum = sum + bias[k];
+			sum = (((((sum - mean1[k])*std1[k])>>FIXSCALE)*gamma1[k])>>FIXSCALE)+beta1[k];
+			sum = (0 > sum)? 0 : sum;
+			//sum = max(0, sum);
+			sum = (((((sum - mean2[k])*std2[k])>>FIXSCALE)*gamma2[k])>>FIXSCALE)+beta2[k];
 #else
 			// Batch Normalization 1
 			sum = sum + bias[k];
@@ -339,20 +465,31 @@ T* FirstLayer_::forward(T* __restrict__ input){
 					bb = (ki*input->Y+kj)*input->Z;
 					for(kk = 0; kk < input->Z; kk++){
 #ifdef TestFix16
-						sum += (filter[aa+kk]*input->b[bb+kk]);
+						sum += ((int32_t)filter[aa+kk]*(int32_t)input->fixp[bb+kk]);
+#elif defined(TestFix32)
+						sum += ((int64_t)filter[aa+kk]*(int64_t)input->fixp[bb+kk]);
 #else
 						sum += (filter[aa+kk]*input->f[bb+kk]);
 #endif
 					}
 				}
 			}
-
+#if defined(TestFix32)||defined(TestFix16)
+			sum = sum >> INPUTSCALE;
+#endif
 #ifdef TestFix16
 			// Batch Normalization 1
 			sum = sum + bias[k];
-			sum = ((((sum - mean1[k])*std1[k])>>8)*gamma1[k]>>8)+beta1[k];
+			sum = (((((sum - mean1[k])*std1[k])>>FIXSCALE)*gamma1[k])>>FIXSCALE)+beta1[k];
 			sum = max(0.0, sum);
-			sum = ((((sum - mean2[k])*std2[k])>>8)*gamma2[k]>>8)+beta2[k];
+			sum = (((((sum - mean2[k])*std2[k])>>FIXSCALE)*gamma2[k])>>FIXSCALE)+beta2[k];
+#elif defined(TestFix32)
+			// Batch Normalization 1
+			sum = sum + bias[k];
+			sum = (((((sum - mean1[k])*std1[k])>>FIXSCALE)*gamma1[k])>>FIXSCALE)+beta1[k];
+			sum = (0 > sum)? 0 : sum;
+			//sum = max(0, sum);
+			sum = (((((sum - mean2[k])*std2[k])>>FIXSCALE)*gamma2[k])>>FIXSCALE)+beta2[k];
 #else
 			// Batch Normalization 1
 			sum = sum + bias[k];
@@ -382,20 +519,31 @@ T* FirstLayer_::forward(T* __restrict__ input){
 					bb = (ki*input->Y+kj)*input->Z;
 					for(kk = 0; kk < input->Z; kk++){
 #ifdef TestFix16
-						sum += (filter[aa+kk]*input->b[bb+kk]);
+						sum += ((int32_t)filter[aa+kk]*(int32_t)input->fixp[bb+kk]);
+#elif defined(TestFix32)
+						sum += ((int64_t)filter[aa+kk]*(int64_t)input->fixp[bb+kk]);
 #else
 						sum += (filter[aa+kk]*input->f[bb+kk]);
 #endif
 					}
 				}
 			}
-
+#if defined(TestFix32)||defined(TestFix16)
+			sum = sum >> INPUTSCALE;
+#endif
 #ifdef TestFix16
 			// Batch Normalization 1
 			sum = sum + bias[k];
-			sum = ((((sum - mean1[k])*std1[k])>>8)*gamma1[k]>>8)+beta1[k];
+			sum = (((((sum - mean1[k])*std1[k])>>FIXSCALE)*gamma1[k])>>FIXSCALE)+beta1[k];
 			sum = max(0.0, sum);
-			sum = ((((sum - mean2[k])*std2[k])>>8)*gamma2[k]>>8)+beta2[k];
+			sum = (((((sum - mean2[k])*std2[k])>>FIXSCALE)*gamma2[k])>>FIXSCALE)+beta2[k];
+#elif defined(TestFix32)
+			// Batch Normalization 1
+			sum = sum + bias[k];
+			sum = (((((sum - mean1[k])*std1[k])>>FIXSCALE)*gamma1[k])>>FIXSCALE)+beta1[k];
+			sum = (0 > sum)? 0 : sum;
+			//sum = max(0, sum);
+			sum = (((((sum - mean2[k])*std2[k])>>FIXSCALE)*gamma2[k])>>FIXSCALE)+beta2[k];
 #else
 			// Batch Normalization 1
 			sum = sum + bias[k];
@@ -428,17 +576,31 @@ T* FirstLayer_::forward(T* __restrict__ input){
 				sum = 0;
 
 #ifdef TestFix16
-				sum += (filter[ 0]*input->b[  leftX   *input->Y+leftY         ])>>8+
-						(filter[ 1]*input->b[  leftX   *input->Y+leftY + 1     ])>>8+
-						(filter[ 2]*input->b[  leftX   *input->Y+leftY + 2     ])>>8+
-						(filter[ 3]*input->b[ (leftX+1)*input->Y+leftY         ])>>8+
-						(filter[ 4]*input->b[ (leftX+1)*input->Y+leftY + 1     ])>>8+
-						(filter[ 5]*input->b[ (leftX+1)*input->Y+leftY + 2     ])>>8+
-						(filter[ 6]*input->b[ (leftX+2)*input->Y+leftY         ])>>8+
-						(filter[ 7]*input->b[ (leftX+2)*input->Y+leftY + 1     ])>>8+
-						(filter[ 8]*input->b[ (leftX+2)*input->Y+leftY + 2     ])>>8;
-#else
+				sum +=         ((((int32_t) filter[ 0]*(int32_t)input->fixp[  leftX   *input->Y+leftY ]))+
+						(((int32_t)filter[ 1]*(int32_t)input->fixp[  leftX   *input->Y+leftY + 1     ]))+
+						(((int32_t)filter[ 2]*(int32_t)input->fixp[  leftX   *input->Y+leftY + 2     ]))+
+						(((int32_t)filter[ 3]*(int32_t)input->fixp[ (leftX+1)*input->Y+leftY         ]))+
+						(((int32_t)filter[ 4]*(int32_t)input->fixp[ (leftX+1)*input->Y+leftY + 1     ]))+
+						(((int32_t)filter[ 5]*(int32_t)input->fixp[ (leftX+1)*input->Y+leftY + 2     ]))+
+						(((int32_t)filter[ 6]*(int32_t)input->fixp[ (leftX+2)*input->Y+leftY         ]))+
+						(((int32_t)filter[ 7]*(int32_t)input->fixp[ (leftX+2)*input->Y+leftY + 1     ]))+
+						(((int32_t)filter[ 8]*(int32_t)input->fixp[ (leftX+2)*input->Y+leftY + 2     ])))>>INPUTSCALE;
 
+#elif defined(TestFix32)
+				sum +=         ((((int64_t) filter[ 0]*(int64_t)input->fixp[  leftX   *input->Y+leftY ]))+
+						(((int64_t)filter[ 1]*(int64_t)input->fixp[  leftX   *input->Y+leftY + 1     ]))+
+						(((int64_t)filter[ 2]*(int64_t)input->fixp[  leftX   *input->Y+leftY + 2     ]))+
+						(((int64_t)filter[ 3]*(int64_t)input->fixp[ (leftX+1)*input->Y+leftY         ]))+
+						(((int64_t)filter[ 4]*(int64_t)input->fixp[ (leftX+1)*input->Y+leftY + 1     ]))+
+						(((int64_t)filter[ 5]*(int64_t)input->fixp[ (leftX+1)*input->Y+leftY + 2     ]))+
+						(((int64_t)filter[ 6]*(int64_t)input->fixp[ (leftX+2)*input->Y+leftY         ]))+
+						(((int64_t)filter[ 7]*(int64_t)input->fixp[ (leftX+2)*input->Y+leftY + 1     ]))+
+						(((int64_t)filter[ 8]*(int64_t)input->fixp[ (leftX+2)*input->Y+leftY + 2     ])))>>INPUTSCALE;
+#else
+				int32_t cycles;
+				KIN1_InitCycleCounter(); /* enable DWT hardware */
+				KIN1_ResetCycleCounter(); /* reset cycle counter */
+				KIN1_EnableCycleCounter(); /* start counting */
 				sum += (filter[ 0]*input->f[  leftX   *input->Y+leftY         ])+
 					(filter[ 1]*input->f[  leftX   *input->Y+leftY + 1     ])+
 					(filter[ 2]*input->f[  leftX   *input->Y+leftY + 2     ])+
@@ -448,23 +610,32 @@ T* FirstLayer_::forward(T* __restrict__ input){
 					(filter[ 6]*input->f[ (leftX+2)*input->Y+leftY         ])+
 					(filter[ 7]*input->f[ (leftX+2)*input->Y+leftY + 1     ])+
 					(filter[ 8]*input->f[ (leftX+2)*input->Y+leftY + 2     ]);
+				cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+				KIN1_DisableCycleCounter(); /* disable counting if not used any more */
 #endif
 #ifdef TestFix16
-				// Batch Normalization 1
-				sum = sum + bias[k];
-				sum = ((((sum - mean1[k])*std1[k])>>8)*gamma1[k]>>8)+beta1[k];
-				sum = max(0.0, sum);
-				sum = ((((sum - mean2[k])*std2[k])>>8)*gamma2[k]>>8)+beta2[k];
+			// Batch Normalization 1
+			sum = sum + bias[k];
+			sum = (((((sum - mean1[k])*std1[k])>>FIXSCALE)*gamma1[k])>>FIXSCALE)+beta1[k];
+			sum = max(0.0, sum);
+			sum = (((((sum - mean2[k])*std2[k])>>FIXSCALE)*gamma2[k])>>FIXSCALE)+beta2[k];
+#elif defined(TestFix32)
+			// Batch Normalization 1
+			sum = sum + bias[k];
+			sum = (((((sum - mean1[k])*std1[k])>>FIXSCALE)*gamma1[k])>>FIXSCALE)+beta1[k];
+			sum = (0 > sum)? 0 : sum;
+			//sum = max(0, sum);
+			sum = (((((sum - mean2[k])*std2[k])>>FIXSCALE)*gamma2[k])>>FIXSCALE)+beta2[k];
 #else
-				// Batch Normalization 1
-				sum = sum + bias[k];
-				sum = (sum - mean1[k])*std1[k]*gamma1[k]+beta1[k];
-				sum = max(0.0, sum);
-				sum = (sum - mean2[k])*std2[k]*gamma2[k]+beta2[k];
+			// Batch Normalization 1
+			sum = sum + bias[k];
+			sum = (sum - mean1[k])*std1[k]*gamma1[k]+beta1[k];
+			sum = max(0.0, sum);
+			sum = (sum - mean2[k])*std2[k]*gamma2[k]+beta2[k];
 #endif
-				if(sum > 0){
-					output->b[(outi*output->Y+outj)*output->Z+bink] |= 1<<shift;
-				}
+			if(sum > 0){
+				output->b[(outi*output->Y+outj)*output->Z+bink] |= 1<<shift;
+			}
 				outj++;
 			}
 			outi++;
@@ -483,27 +654,44 @@ T* FirstLayer_::forward(T* __restrict__ input){
 				rightY = min(input->Y, j+kY2+1);
 				// Calculate binary convolution
 				sum = 0;
-
+				int32_t cycles;
+				//KIN1_InitCycleCounter(); /* enable DWT hardware */
+				//KIN1_ResetCycleCounter(); /* reset cycle counter */
+				//KIN1_EnableCycleCounter(); /* start counting */
 				for(ki = leftX; ki < rightX; ki++){
 					for(kj = leftY; kj < rightY; kj++){
 						aa = ((kX2+ki-i)*kY+kY2+kj-j)*input->Z;
 						bb = (ki*input->Y+kj)*input->Z;
 						for(kk = 0; kk < input->Z; kk++){
 #ifdef TestFix16
-							sum += (filter[aa+kk]*input->b[bb+kk])>>8;
+							sum += ((int32_t)filter[aa+kk]*(int32_t)input->fixp[bb+kk]);
+#elif defined(TestFix32)
+							sum += ((int64_t)filter[aa+kk]*(int64_t)input->fixp[bb+kk]);
 #else
 							sum += (filter[aa+kk]*input->f[bb+kk]);
+							//sum += (filter[((kX2+ki-i)*kY+kY2+kj-j)*input->Z+kk]*input->f[(ki*input->Y+kj)*input->Z+kk]);
 #endif
 						}
 					}
 				}
-
+				//cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+				//KIN1_DisableCycleCounter(); /* disable counting if not used any more */
+#if defined(TestFix32)||defined(TestFix16)
+			sum = sum >> INPUTSCALE;
+#endif
 #ifdef TestFix16
 				// Batch Normalization 1
 				sum = sum + bias[k];
-				sum = ((((sum - mean1[k])*std1[k])>>8)*gamma1[k]>>8)+beta1[k];
+				sum = ((((sum - mean1[k])*std1[k])>>FIXSCALE)*gamma1[k]>>FIXSCALE)+beta1[k];
 				sum = max(0.0, sum);
-				sum = ((((sum - mean2[k])*std2[k])>>8)*gamma2[k]>>8)+beta2[k];
+				sum = ((((sum - mean2[k])*std2[k])>>FIXSCALE)*gamma2[k]>>FIXSCALE)+beta2[k];
+#elif defined(TestFix32)
+			// Batch Normalization 1
+			sum = sum + bias[k];
+			sum = (((((sum - mean1[k])*std1[k])>>FIXSCALE)*gamma1[k])>>FIXSCALE)+beta1[k];
+			sum = (0 > sum)? 0 : sum;
+			//sum = max(0, sum);
+			sum = (((((sum - mean2[k])*std2[k])>>FIXSCALE)*gamma2[k])>>FIXSCALE)+beta2[k];
 #else
 				// Batch Normalization 1
 				sum = sum + bias[k];
@@ -527,8 +715,9 @@ T* FirstLayer_::forward(T* __restrict__ input){
 	}
 
     delete input;
+#ifdef LED_USED
     BSP_LED_Toggle(LED1);
-
+#endif
     return output;
 
 }

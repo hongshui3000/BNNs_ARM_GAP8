@@ -1,4 +1,36 @@
 #include "BinCRBB.h"
+
+/* DWT (Data Watchpoint and Trace) registers, only exists on ARM Cortex with a DWT unit */
+#define KIN1_DWT_CONTROL             (*((volatile uint32_t*)0xE0001000))
+/*!< DWT Control register */
+#define KIN1_DWT_CYCCNTENA_BIT       (1UL<<0)
+/*!< CYCCNTENA bit in DWT_CONTROL register */
+#define KIN1_DWT_CYCCNT              (*((volatile uint32_t*)0xE0001004))
+/*!< DWT Cycle Counter register */
+#define KIN1_DEMCR                   (*((volatile uint32_t*)0xE000EDFC))
+/*!< DEMCR: Debug Exception and Monitor Control Register */
+#define KIN1_TRCENA_BIT              (1UL<<24)
+/*!< Trace enable bit in DEMCR register */
+
+#define KIN1_InitCycleCounter() \
+KIN1_DEMCR |= KIN1_TRCENA_BIT
+/*!< TRCENA: Enable trace and debug block DEMCR (Debug Exception and Monitor Control Register */
+
+#define KIN1_ResetCycleCounter() \
+KIN1_DWT_CYCCNT = 0
+/*!< Reset cycle counter */
+
+#define KIN1_EnableCycleCounter() \
+KIN1_DWT_CONTROL |= KIN1_DWT_CYCCNTENA_BIT
+/*!< Enable cycle counter */
+
+#define KIN1_DisableCycleCounter() \
+KIN1_DWT_CONTROL &= ~KIN1_DWT_CYCCNTENA_BIT
+/*!< Disable cycle counter */
+
+#define KIN1_GetCycleCounter() \
+KIN1_DWT_CYCCNT
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 #ifdef originalxnor
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -429,10 +461,14 @@ BinCRBB_::~BinCRBB_(){
     delete[] threshold1_int32;
     delete[] signBetaStar;
 }
-
+#ifdef REPOINTER
 T* BinCRBB_::forward(T* __restrict__ input){
+#else
+T* BinCRBB_::forward(T* input){
+#endif
+		#ifdef LED_USED
     BSP_LED_Toggle(LED2);
-
+#endif
     int32_t i, j, k, ki, kj, kk, x0, y0, outi, outj;
     int32_t kX2, kY2, outX, outY, cons, cons2;
     int32_t leftX, rightX, leftY, rightY, sum, sum2;
@@ -640,6 +676,7 @@ T* BinCRBB_::forward(T* __restrict__ input){
                 			}
 				}
 #else
+
 				switch(input->Z)
 				{
 					case 0x1:
@@ -1035,21 +1072,31 @@ T* BinCRBB_::forward(T* __restrict__ input){
 		            	// Calculate binary convolution
 			    	sum = 0;
 #ifndef UNFOLDED
+					//int32_t cycles;
+					//KIN1_InitCycleCounter(); /* enable DWT hardware */
+					//KIN1_ResetCycleCounter(); /* reset cycle counter */
+					//KIN1_EnableCycleCounter(); /* start counting */
 				for(ki = leftX; ki < rightX; ki++){
 					for(kj = leftY; kj < rightY; kj++){
-						/*for(kk = 0; kk < input->Z; kk++){
+						for(kk = 0; kk < input->Z; kk++){
 							sum += popcount(filter[((kX2+ki-i)*kY+kY2+kj-j)*input->Z+kk]^\
                 		         				     input->b[(ki*input->Y+kj)*input->Z+kk]);
-                		       		}*/
-                	       			kk = 0;
+                		       		}
+                	       			/*kk = 0;
 						do{
 							sum += popcount(filter[((kX2+ki-i)*kY+kY2+kj-j)*input->Z+kk]^\
                                         	                           input->b[(ki*input->Y+kj)*input->Z+kk]);
 							kk++;
-						}while(kk<input->Z);
+						}while(kk<input->Z);*/
                 			}
 				}
+				//cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+				//KIN1_DisableCycleCounter(); /* disable counting if not used any more */
 #else
+				int32_t cycles;
+				//KIN1_InitCycleCounter(); /* enable DWT hardware */
+				//KIN1_ResetCycleCounter(); /* reset cycle counter */
+				//KIN1_EnableCycleCounter(); /* start counting */
 				switch(input->Z)
 				{
 					case 0x1:
@@ -1125,6 +1172,8 @@ T* BinCRBB_::forward(T* __restrict__ input){
 					break;
 
 				}
+				//cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+				//KIN1_DisableCycleCounter(); /* disable counting if not used any more */
 #endif
 /*
 				if(sum <= threshold1_int32[k]){
