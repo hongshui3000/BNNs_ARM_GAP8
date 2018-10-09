@@ -1,7 +1,7 @@
-
 # Topic: Sound Events Classification using BNNs on Tightly Power-Restricted IoT Devices
 This is the source code of my thesis at ETH Zurich.
 *    Folder:
+
 	*   /model		: Model data on GAP8, DMA, memory allocation
 
     *   /layers		: XNOR Network on GAP8
