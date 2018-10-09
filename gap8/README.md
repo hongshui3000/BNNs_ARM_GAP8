@@ -44,22 +44,25 @@ To compile and run on virtual platform/board
 * api.c: Code for Fabric Controller, run the function "firstfunction" in utility/main_function.c.
 * utility/main_function.c : Call MFCCs preprocessing function, call BNNs forwarding function.
 * config.h:
+
         Default setting
 		#define UNFOLDED       --> enable for loop unrolling
 		#define FIXPOINT_32BIT --> using 32 bit to store model in first layer and last layer
-		#define MYPOPCOUNT     --> map: 32-2 $\times$ popcount(I xor W) ----> popcount(I xor W) in binary layers (my contribution)
-
+		#define MYPOPCOUNT     -->
 		#define I2S_DEMO       --> activate microphone application
-		#define HIGH_PASS      --> remove low frequency bins in MFCCs preprocessing on Estimeate_power step
+		#define HIGH_PASS      --> remove low frequency bins in MFCCs preprocessing on Estimate_power step
 		#define MFCC_PREPROCESSING --> enable MFCCs preprocessing, input is sound samples, 16kHz
 		#define DMA_TRANS --> enable DMA for loading model from L2 to L1 
 		#define MULTICORES --> enable parallelization of BNNs and MFCC.
 
 ###Some issues when using pulp_sdk git tag: 2018.08.06
-		MFCC: filtering still 4 cores. Full 8 cores parallelization in filter causes wrong results in this sdk version (fully 8 cores parallelization work in previous version of pulp_sdk before 2018.08.04 version)
-		*   The number of barriers in Radix2FFT_DIF_args2 function in mfcc.c should be reduced to only 1.
-		*   FirstLayer: #pragma omp for schedule(static) --> not works (#pragma omp for schedule(dynamic) is used instead.)
-		*    BinaryLayer: #pragma omp for schedule(static) --> not works (#pragma omp for schedule(dynamic) is used instead.)
+*   MFCC: filtering still 4 cores. Full 8 cores parallelization in filter causes wrong results in this sdk version (fully 8 cores parallelization work in previous version of pulp_sdk before 2018.08.04 version)
+
+*   The number of barriers in Radix2FFT_DIF_args2 function in mfcc.c should be reduced to only 1.
+
+*   FirstLayer: #pragma omp for schedule(static) --> not works (#pragma omp for schedule(dynamic) is used instead.)
+
+*    BinaryLayer: #pragma omp for schedule(static) --> not works (#pragma omp for schedule(dynamic) is used instead.)
 
 * mfcc/mfcc.c: 
 			the look-up table will be first loaded from L2 to L1 and after generating 1 tile of feature map, the look-up table will be released from L1. There is no logarithm after filering in this implementation
