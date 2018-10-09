@@ -2,18 +2,14 @@ Li-Yung, Chen. Masther thesis at ETH Zurich
 
 Topic: Implementation and Optimization of BNNs in Embedded Platform and IoT
 
-Folder:
-	/model		: Model data on GAP8, DMA, memory allocation, 
+*    Folder:
+	*    /model		: Model data on GAP8, DMA, memory allocation, 
+    *    /layers		: XNOR Network on GAP8
+    *    /utility	: functions definitions, main functions.
+	*    /preprocess	: Precalculate floating point model data into 32 bits or 16 bits fixpoint
+    *    /mfcc           : MFCC preprocessing using Greenwaves FFT library
 
-	/layers		: XNOR Network on GAP8
-
-	/utility	: functions definitions, main functions.
-
-	/preprocess	: Precalculate floating point model data into 32 bits or 16 bits fixpoint
-
-	/mfcc           : MFCC preprocessing using Greenwaves FFT library
-
-Yout will see more details in individual folder "README.md"
+You will see more details in individual folder "README.md"
 
 --------------------------------------------------------------
 1. How to use:
@@ -36,9 +32,7 @@ To compile and run on virtual platform/board
 
 	$ make clean all run
 	
-------------------------------------------------------------
-2. Configuration using MACRO :
-------------------------------------------------------------	
+# Configuration using MACRO :	
 
 ===========
 cluster.c
@@ -49,8 +43,8 @@ Not-project relevant
 ===========
 
 
-api.c					: Code for Fabric Controller, run the function "firstfunction" in utility/main_function.c.
-utility/main_function.c : Call MFCCs preprocessing function, call BNNs forwarding function.
+*    api.c: Code for Fabric Controller, run the function "firstfunction" in utility/main_function.c.
+*    utility/main_function.c : Call MFCCs preprocessing function, call BNNs forwarding function.
 config.h				:
 	MACRO:
 		#define UNFOLDED       --> enable for loop unrolling
