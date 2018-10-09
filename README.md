@@ -1,7 +1,6 @@
-Li-Yung, Chen. Masther thesis at ETH Zurich
-
-Topic: Implementation and Optimization of BNNs in Embedded Platform and IoT
------------------------------
+# Topic: Sound Events Classification using BNNs on Tightly Power-Restricted IoT Devices
+This is the source code of my thesis at ETH Zurich.
+## File Organization
 Folder:
 	Measurement				: The results of optimized binary network in ARM and GAP8.
 	ARM_XNOR				: XNOR Network on ARM Cortex-M4 STM32F469NI discovery board
