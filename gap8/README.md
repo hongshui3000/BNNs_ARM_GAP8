@@ -1,19 +1,22 @@
-Li-Yung, Chen. Masther thesis at ETH Zurich
 
-Topic: Implementation and Optimization of BNNs in Embedded Platform and IoT
-
+# Topic: Sound Events Classification using BNNs on Tightly Power-Restricted IoT Devices
+This is the source code of my thesis at ETH Zurich.
 *    Folder:
-	*    /model		: Model data on GAP8, DMA, memory allocation, 
+	*    /model		: Model data on GAP8, DMA, memory allocation
+
     *    /layers		: XNOR Network on GAP8
+
     *    /utility	: functions definitions, main functions.
+
 	*    /preprocess	: Precalculate floating point model data into 32 bits or 16 bits fixpoint
+
     *    /mfcc           : MFCC preprocessing using Greenwaves FFT library
+    
 
 You will see more details in individual folder "README.md"
 
---------------------------------------------------------------
-1. How to use:
---------------------------------------------------------------
+## How to use:
+
 To set up default configuration
 
 	$ make conf
@@ -32,12 +35,12 @@ To compile and run on virtual platform/board
 
 	$ make clean all run
 	
-# Configuration using MACRO :	
+## Configuration using MACRO :	
 
 ===========
 cluster.c
 cluster.h
-These two are for testing basic parallelization operation of OpenMP
+These two are for testing basic paralllization operation of OpenMP
 Not-project relevant
 
 ===========
@@ -81,7 +84,7 @@ Not-project relevant
 * mfcc/mfcc.h: including look up table for DCT, FFT, filtering with Q2.13 16 bit integer.
 
 
-# GAPuino board issues:
+## GAPuino board issues:
 
 Prototype number PROTO0217:
 * Poor USB connection, easily disturbed and disconnected.
@@ -89,14 +92,19 @@ Prototype number PROTO0217:
 
 Prototype number PROTO0219:
 * USB cannot power up the board.
-* Have to power up by the Power Supply with 10V (current 70-110 mA) so that USB can then load the binary into the board. The board can still work but it just can not powered by USB.
+* Have to power up by the Power Supply with 10V (current 70-110 mA) so 
+that USB can then load the binary into the board. The board can still 
+work but it just can not powered by USB.
 
-# Other files in /gap8 :
+## Other files in /gap8 :
 
 There are many testing data in /gap8 folder.
-Basically, including one of the input data in utility/main_function.c  (sound samples with MFCC preprocessing and BNNs /or preprocessed MFCCs features with BNNs only), then we can test with sound sample input/ MFCCs feature input.
+Basically, including one of the input data in utility/main_function.c  
+(sound samples with MFCC preprocessing and BNNs /or preprocessed MFCCs 
+features with BNNs only), then we can test with sound sample input/ MFCCs
+feature input.
 
-# Some tricks :
+## Some tricks :
 
 * "printf("%f", (float) float_var)" is not supported by sdk. Cannot print float data. Please using myPrintf function in utility/misc.c
 * For freeing L1 memory, the pointer and the size of memory to be released must be specified:
