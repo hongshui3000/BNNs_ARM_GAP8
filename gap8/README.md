@@ -16,6 +16,10 @@ You will see more details in individual folder "README.md"
 
 ## How to use:
 
+First of all, you need to source the sdk
+
+	$ source pulp_sdk/sourceme.sh
+
 To set up default configuration
 
 	$ make conf
