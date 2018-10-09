@@ -2,16 +2,15 @@
 # Topic: Sound Events Classification using BNNs on Tightly Power-Restricted IoT Devices
 This is the source code of my thesis at ETH Zurich.
 *    Folder:
-	*    /model		: Model data on GAP8, DMA, memory allocation
+	*   /model		: Model data on GAP8, DMA, memory allocation
 
-    *    /layers		: XNOR Network on GAP8
+    *   /layers		: XNOR Network on GAP8
 
-    *    /utility	: functions definitions, main functions.
+    *   /utility	: Functions definitions, main functions.
 
-	*    /preprocess	: Precalculate floating point model data into 32 bits or 16 bits fixpoint
+	*   /preprocess	: Precalculating floating point model data into 32 bits or 16 bits fixpoint
 
-    *    /mfcc           : MFCC preprocessing using Greenwaves FFT library
-    
+    *   /mfcc           : MFCC preprocessing using Greenwaves FFT library
 
 You will see more details in individual folder "README.md"
 
@@ -37,28 +36,24 @@ To compile and run on virtual platform/board
 	
 ## Configuration using MACRO :	
 
-===========
-cluster.c
-cluster.h
-These two are for testing basic paralllization operation of OpenMP
-Not-project relevant
-
-===========
-
+* For testing purpose:
+    *   cluster.c
+    *   cluster.h
+    *   These two are for testing basic parallelization operation of OpenMP Not-project relevant
 
 * api.c: Code for Fabric Controller, run the function "firstfunction" in utility/main_function.c.
 * utility/main_function.c : Call MFCCs preprocessing function, call BNNs forwarding function.
 * config.h:
-	MACRO:
+        Default setting
 		#define UNFOLDED       --> enable for loop unrolling
 		#define FIXPOINT_32BIT --> using 32 bit to store model in first layer and last layer
-		#define MYPOPCOUNT     --> map: 32-2*popcount(I xor W)  -----> popcount(I xor W) in binary layers (my contribution)
+		#define MYPOPCOUNT     --> map: 32-2 $\times$ popcount(I xor W) ----> popcount(I xor W) in binary layers (my contribution)
+
 		#define I2S_DEMO       --> activate microphone application
 		#define HIGH_PASS      --> remove low frequency bins in MFCCs preprocessing on Estimeate_power step
 		#define MFCC_PREPROCESSING --> enable MFCCs preprocessing, input is sound samples, 16kHz
 		#define DMA_TRANS --> enable DMA for loading model from L2 to L1 
 		#define MULTICORES --> enable parallelization of BNNs and MFCC.
-
 
 			******some issues when using pulp_sdk git tag: 2018.08.06******
 			MFCC: filtering still 4 cores. Full 8 cores parallelization in filter causes wrong results in this sdk version
@@ -72,14 +67,14 @@ Not-project relevant
 * mfcc/mfcc.c: 
 			the look-up table will be first loaded from L2 to L1 and after generating 1 tile of feature map, the look-up table will be released from L1. There is no logarithm after filering in this implementation
 
-			default setting	
-			#define SAMP_FREQ         16000   //sampling rate of sound
-			#define NUM_FBANK_BINS    24	  //number of triangular filters
-			#define NUM_MFCC_FEATURES 64
-			#define WIN_LENGTH        512     //512 points windows
-			#define WIN_OVERLAP       384     //384 points overlap with next window --> 128 points windowing step
-			#define IMG_WIDTH         400     //MFCCs feature dimension x (time)
-			#define MFCC_BINS         64      //MFCCs feature dimension y (Mel scale (frequency) after DCT)
+		default setting	
+		#define SAMP_FREQ         16000   //sampling rate of sound
+		#define NUM_FBANK_BINS    24	  //number of triangular filters
+		#define NUM_MFCC_FEATURES 64
+		#define WIN_LENGTH        512     //512 points windows
+		#define WIN_OVERLAP       384     //384 points overlap with next window --> 128 points windowing step
+		#define IMG_WIDTH         400     //MFCCs feature dimension x (time)
+		#define MFCC_BINS         64      //MFCCs feature dimension y (Mel scale (frequency) after DCT)
 
 * mfcc/mfcc.h: including look up table for DCT, FFT, filtering with Q2.13 16 bit integer.
 
