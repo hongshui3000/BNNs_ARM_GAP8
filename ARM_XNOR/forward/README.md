@@ -42,13 +42,11 @@ This file is for the x86 host machine.
 
 * The model file included reached a precision of 63%
 
-* The test image included is test image number 2
-
 * The network can not handle convolutions with feature maps
   that don't have a depth of 32
 
 * Due to floating point precisions the final numerical result may vary
   by less than 1% (classification remains the same for all the images in
   the test set)
-  
+
 * MFCC preprocessing is not integrated for host machine.

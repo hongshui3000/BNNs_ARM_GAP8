@@ -1,6 +1,4 @@
----------------------------------------------------------
-1. Setting up
----------------------------------------------------------
+## Setting up
 
 Requires torch7 http://torch.ch
 Optional numpy4th https://github.com/htwaijry/npy4th
@@ -9,9 +7,7 @@ Optional numpy4th https://github.com/htwaijry/npy4th
 When using numpy data the folder containing the data is expected
 to have 4 files: X_train.npy, y_train.npy, X_test.npy, y_test.npy.
 
---------------------------------------------------------
-2. Usage
----------------------------------------------------------
+## Usage
 
 All available options are listed in opts.lua
 
@@ -24,9 +20,7 @@ Re-training an existing model add
 Testing a model
 th main.lua -data path-to-data/ -dataType numpy -binaryWeight -retrain path-to-model -testOnly
 
---------------------------------------------------------
-3. Exporting
----------------------------------------------------------
+## Exporting
 
 Exporting the data for usage with the C++ forward pass code can be done
 using the export.lua script. The network structure and input file must be
