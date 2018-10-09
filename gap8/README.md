@@ -43,9 +43,9 @@ Not-project relevant
 ===========
 
 
-*    api.c: Code for Fabric Controller, run the function "firstfunction" in utility/main_function.c.
-*    utility/main_function.c : Call MFCCs preprocessing function, call BNNs forwarding function.
-config.h				:
+* api.c: Code for Fabric Controller, run the function "firstfunction" in utility/main_function.c.
+* utility/main_function.c : Call MFCCs preprocessing function, call BNNs forwarding function.
+* config.h:
 	MACRO:
 		#define UNFOLDED       --> enable for loop unrolling
 		#define FIXPOINT_32BIT --> using 32 bit to store model in first layer and last layer
@@ -57,19 +57,17 @@ config.h				:
 		#define MULTICORES --> enable parallelization of BNNs and MFCC.
 
 
-
 			******some issues when using pulp_sdk git tag: 2018.08.06******
 			MFCC: filtering still 4 cores. Full 8 cores parallelization in filter causes wrong results in this sdk version
 					(fully 8 cores parallelization work in previous version of pulp_sdk before 2018.08.04 version)
-				--The number of barriers in Radix2FFT_DIF_args2 function in mfcc.c should be readuced to only 1.
+				--The number of barriers in Radix2FFT_DIF_args2 function in mfcc.c should be reduced to only 1.
 			FirstLayer: 
 				 #pragma omp for schedule(static) --> not works (#pragma omp for schedule(dynamic) is used instead.)
 			BinaryLayer:
 				 #pragma omp for schedule(static) --> not works (#pragma omp for schedule(dynamic) is used instead.)
 
-mfcc/mfcc.c		   	    	: 
+* mfcc/mfcc.c: 
 			the look-up table will be first loaded from L2 to L1 and after generating 1 tile of feature map, the look-up table will be released from L1. There is no logarithm after filering in this implementation
-
 
 			default setting	
 			#define SAMP_FREQ         16000   //sampling rate of sound
@@ -80,31 +78,26 @@ mfcc/mfcc.c		   	    	:
 			#define IMG_WIDTH         400     //MFCCs feature dimension x (time)
 			#define MFCC_BINS         64      //MFCCs feature dimension y (Mel scale (frequency) after DCT)
 
-mfcc/mfcc.h		   	    	: 
-			including look up table for DCT, FFT, filtering with Q2.13 16 bit integer.
+* mfcc/mfcc.h: including look up table for DCT, FFT, filtering with Q2.13 16 bit integer.
 
 
---------------------------------------------------------------
-3. GAPuino board issues:
---------------------------------------------------------------
+# GAPuino board issues:
+
 Prototype number PROTO0217:
-1. Poor USB connection, easily disturbed and disconnected.
-2. Binary cannot be loaded into the board. JTAG issue occurs.
+* Poor USB connection, easily disturbed and disconnected.
+* Binary cannot be loaded into the board. JTAG issue occurs.
 
 Prototype number PROTO0219:
-1. USB cannot power up the board.
-2. Have to power up by the Power Supply with 10V (current 70-110 mA) so that USB can then load the binary into the board. The board can still work but it just can not powered by USB.
+* USB cannot power up the board.
+* Have to power up by the Power Supply with 10V (current 70-110 mA) so that USB can then load the binary into the board. The board can still work but it just can not powered by USB.
 
---------------------------------------------------------------
-4. Other files in /gap8 :
---------------------------------------------------------------
+# Other files in /gap8 :
+
 There are many testing data in /gap8 folder.
 Basically, including one of the input data in utility/main_function.c  (sound samples with MFCC preprocessing and BNNs /or preprocessed MFCCs features with BNNs only), then we can test with sound sample input/ MFCCs feature input.
 
---------------------------------------------------------------
-5. Some tricks :
---------------------------------------------------------------
+# Some tricks :
 
-	1. "printf("%f", (float) float_var)" is not supported by sdk. Cannot print float data. Please using myPrintf function in utility/misc.c
-	2. For freeing L1 memory, the pointer and the size of memory to be released must be specified:
+* "printf("%f", (float) float_var)" is not supported by sdk. Cannot print float data. Please using myPrintf function in utility/misc.c
+* For freeing L1 memory, the pointer and the size of memory to be released must be specified:
 		rt_free(RT_ALLOC_CL_DATA, pointer, size_to_be_pointed)
