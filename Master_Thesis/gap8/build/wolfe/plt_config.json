@@ -1,0 +1,6113 @@
+{
+  "loader": {
+    "bridge": "none",
+    "binaries": [
+      "/scratch/sem17f11/xnornet_gap8/gap8/build/wolfe/api/api"
+    ],
+    "cable": "proxy",
+    "boot": {
+      "mode": "rom"
+    }
+  },
+  "system_tree": {
+    "board": {
+      "camera": {
+        "vp_ports": [
+          "cpi"
+        ],
+        "type": "dpi",
+        "model": "himax",
+        "module": "camera.so"
+      },
+      "jtag_proxy": {
+        "vp_ports": [
+          "jtag",
+          "ctrl"
+        ],
+        "port": 37539,
+        "type": "dpi",
+        "verbose": false,
+        "active": false,
+        "module": "jtag_proxy.so"
+      },
+      "vp_class": "pulp/board",
+      "chip": {
+        "pulp_chip_family": "wolfe",
+        "vp_class": "pulp/chip",
+        "soc_clock": {
+          "vp_ports": [
+            "out"
+          ],
+          "vp_class": "vp/clock_domain",
+          "frequency": 50000000
+        },
+        "soc": {
+          "fll2": {
+            "vp_ports": [
+              "input"
+            ],
+            "archi_files": [
+              "archi/fll/fll_v1.h"
+            ],
+            "version": 1,
+            "vp_class": "pulp/fll/fll_v1",
+            "hal_files": [
+              "hal/fll/fll_v1.h"
+            ]
+          },
+          "pmu": {
+            "vp_ports": [
+              "input"
+            ],
+            "vp_class": "pulp/pmu/pmu_v2",
+            "nb_domains": 2,
+            "gv_class": "power.pmu.Pmu",
+            "archi_files": [
+              "archi/maestro/maestro_v2.h"
+            ],
+            "version": 2,
+            "hal_files": [
+              "hal/maestro/pmu_v2.h"
+            ]
+          },
+          "adv_dbg_unit": {
+            "vp_ports": [
+              "io",
+              "jtag"
+            ],
+            "vp_class": "pulp/adv_dbg_unit/adv_dbg_unit"
+          },
+          "stdout": {
+            "vp_ports": [
+              "input"
+            ],
+            "vp_class": "pulp/stdout/stdout_v3",
+            "max_core_per_cluster": 16,
+            "archi_files": [
+              "archi/stdout/stdout_v3.h"
+            ],
+            "version": 3,
+            "max_cluster": 33
+          },
+          "soc_eu": {
+            "vp_ports": [
+              "fc_event_itf",
+              "input",
+              "event_in"
+            ],
+            "vp_class": "pulp/soc_eu/soc_eu_v1",
+            "properties": {
+              "first_fc_event": 48,
+              "nb_fc_events": 8
+            },
+            "archi_files": [
+              "archi/soc_eu/soc_eu_v1.h"
+            ],
+            "version": 1,
+            "hal_files": [
+              "hal/soc_eu/soc_eu_v1.h"
+            ]
+          },
+          "rom": {
+            "vp_ports": [
+              "input"
+            ],
+            "size": 8192,
+            "map_size": "0x00002000",
+            "vp_class": "memory/memory",
+            "map_base": "0x1A000000",
+            "version": 2,
+            "hal_files": [
+              "hal/rom/rom_v2.h"
+            ]
+          },
+          "fc_itc": {
+            "vp_ports": [
+              "irq_req",
+              "input",
+              "in_event_22",
+              "in_event_23",
+              "irq_ack",
+              "in_event_8",
+              "in_event_10",
+              "in_event_11",
+              "soc_event"
+            ],
+            "fifo_irq": 26,
+            "vp_class": "pulp/itc/itc_v1",
+            "regmap": {
+              "status_set": {
+                "type": "register",
+                "desc": "",
+                "width": 32,
+                "offset": "0x10"
+              },
+              "ack_clr": {
+                "type": "register",
+                "desc": "",
+                "width": 32,
+                "offset": "0x20"
+              },
+              "ack_set": {
+                "type": "register",
+                "desc": "",
+                "width": 32,
+                "offset": "0x1C"
+              },
+              "status_clr": {
+                "type": "register",
+                "desc": "",
+                "width": 32,
+                "offset": "0x14"
+              },
+              "fifo": {
+                "type": "register",
+                "desc": "",
+                "width": 32,
+                "offset": "0x24"
+              },
+              "mask_clr": {
+                "type": "register",
+                "desc": "",
+                "width": 32,
+                "offset": "0x08"
+              },
+              "mask_set": {
+                "type": "register",
+                "desc": "",
+                "width": 32,
+                "offset": "0x04"
+              },
+              "status": {
+                "type": "register",
+                "desc": "",
+                "width": 32,
+                "offset": "0x0C"
+              },
+              "ack": {
+                "type": "register",
+                "desc": "",
+                "width": 32,
+                "offset": "0x18"
+              },
+              "mask": {
+                "type": "register",
+                "desc": "",
+                "width": 32,
+                "offset": "0x00"
+              }
+            },
+            "archi_files": [
+              "archi/itc/itc_v1.h"
+            ],
+            "nb_fifo_events": 8,
+            "version": 1,
+            "hal_files": [
+              "hal/itc/itc_v1.h"
+            ]
+          },
+          "l2_shared": {
+            "map_base": "0x1C010000",
+            "nb_banks": 4,
+            "size": 458752,
+            "map_size": "0x00070000"
+          },
+          "l2_priv1": {
+            "map_base": "0x1C008000",
+            "vp_ports": [
+              "input"
+            ],
+            "vp_class": "memory/memory",
+            "size": 32768,
+            "map_size": "0x00008000"
+          },
+          "soc_ico": {
+            "vp_ports": [
+              "debug",
+              "axi_slave",
+              "fc_fetch",
+              "fc_data",
+              "udma_tx",
+              "apb",
+              "axi_master",
+              "l2_shared_0",
+              "l2_shared_1",
+              "l2_shared_2",
+              "l2_shared_3",
+              "l2_priv0",
+              "l2_priv1"
+            ],
+            "vp_class": null,
+            "fc_fetch_ico": {
+              "vp_ports": [
+                "l2_shared",
+                "ll_ico",
+                "input"
+              ],
+              "bandwidth": 4,
+              "mappings": {
+                "l2_shared": {
+                  "base": "0x1C010000",
+                  "size": "0x00070000"
+                },
+                "ll_ico": {}
+              },
+              "vp_class": "interco/router",
+              "latency": 0,
+              "id": 0
+            },
+            "hb_ico": {
+              "vp_ports": [
+                "out_0",
+                "out_1",
+                "out_2",
+                "out_3",
+                "input"
+              ],
+              "nb_slaves": 4,
+              "remove_offset": "0x1C010000",
+              "vp_class": "interco/interleaver",
+              "stage_bits": 0,
+              "interleaving_bits": 2,
+              "nb_masters": 0
+            },
+            "udma_rx_ico": {
+              "vp_ports": [
+                "l2_shared",
+                "ll_ico"
+              ],
+              "bandwidth": 4,
+              "mappings": {
+                "l2_shared": {
+                  "base": "0x1C010000",
+                  "size": "0x00070000"
+                },
+                "ll_ico": {}
+              },
+              "vp_class": "interco/router",
+              "latency": 0,
+              "id": 0
+            },
+            "fc_data_ico": {
+              "vp_ports": [
+                "l2_shared",
+                "ll_ico",
+                "input"
+              ],
+              "bandwidth": 4,
+              "mappings": {
+                "l2_shared": {
+                  "base": "0x1C010000",
+                  "size": "0x00070000"
+                },
+                "ll_ico": {}
+              },
+              "vp_class": "interco/router",
+              "latency": 0,
+              "id": 0
+            },
+            "nb_l2_shared_banks": 4,
+            "udma_tx_ico": {
+              "vp_ports": [
+                "l2_shared",
+                "ll_ico",
+                "input"
+              ],
+              "bandwidth": 4,
+              "mappings": {
+                "l2_shared": {
+                  "base": "0x1C010000",
+                  "size": "0x00070000"
+                },
+                "ll_ico": {}
+              },
+              "vp_class": "interco/router",
+              "latency": 0,
+              "id": 0
+            },
+            "gv_class": "pulp.Soc_Ico_v2.Soc_Ico",
+            "ll_ico": {
+              "vp_ports": [
+                "apb",
+                "rom",
+                "l2_priv0",
+                "l2_priv0_alias",
+                "l2_priv1",
+                "l2_shared",
+                "axi_master",
+                "input"
+              ],
+              "bandwidth": 4,
+              "mappings": {
+                "axi_master": {
+                  "base": "0x10000000",
+                  "size": "0x400000"
+                },
+                "apb": {
+                  "base": "0x1A100000",
+                  "size": "0x00100000"
+                },
+                "l2_shared": {
+                  "base": "0x1C010000",
+                  "size": "0x00070000"
+                },
+                "l2_priv1": {
+                  "base": "0x1C008000",
+                  "remove_offset": "0x1C008000",
+                  "size": "0x00008000"
+                },
+                "rom": {
+                  "base": "0x1A000000",
+                  "size": "0x00002000"
+                },
+                "l2_priv0": {
+                  "base": "0x1C000000",
+                  "remove_offset": "0x1C000000",
+                  "size": "0x00008000"
+                },
+                "l2_priv0_alias": {
+                  "base": "0x00000000",
+                  "size": "0x00008000"
+                }
+              },
+              "vp_class": "interco/router",
+              "latency": 0,
+              "id": 0
+            },
+            "vp_comps": [
+              "ll_ico",
+              "hb_ico",
+              "fc_fetch_ico",
+              "fc_data_ico",
+              "udma_rx_ico",
+              "udma_tx_ico"
+            ],
+            "vp_bindings": [
+              [
+                "self->debug",
+                "ll_ico->input"
+              ],
+              [
+                "self->axi_slave",
+                "ll_ico->input"
+              ],
+              [
+                "self->fc_fetch",
+                "fc_fetch_ico->input"
+              ],
+              [
+                "self->fc_data",
+                "fc_data_ico->input"
+              ],
+              [
+                "self->udma_tx",
+                "udma_tx_ico->input"
+              ],
+              [
+                "ll_ico->apb",
+                "self->apb"
+              ],
+              [
+                "ll_ico->rom",
+                "self->apb"
+              ],
+              [
+                "ll_ico->l2_priv0",
+                "self->l2_priv0"
+              ],
+              [
+                "ll_ico->l2_priv0_alias",
+                "self->l2_priv0"
+              ],
+              [
+                "ll_ico->l2_priv1",
+                "self->l2_priv1"
+              ],
+              [
+                "ll_ico->l2_shared",
+                "hb_ico->input"
+              ],
+              [
+                "ll_ico->axi_master",
+                "self->axi_master"
+              ],
+              [
+                "hb_ico->out_0",
+                "self->l2_shared_0"
+              ],
+              [
+                "hb_ico->out_1",
+                "self->l2_shared_1"
+              ],
+              [
+                "hb_ico->out_2",
+                "self->l2_shared_2"
+              ],
+              [
+                "hb_ico->out_3",
+                "self->l2_shared_3"
+              ],
+              [
+                "fc_fetch_ico->l2_shared",
+                "hb_ico->input"
+              ],
+              [
+                "fc_fetch_ico->ll_ico",
+                "ll_ico->input"
+              ],
+              [
+                "fc_data_ico->l2_shared",
+                "hb_ico->input"
+              ],
+              [
+                "fc_data_ico->ll_ico",
+                "ll_ico->input"
+              ],
+              [
+                "udma_rx_ico->l2_shared",
+                "hb_ico->input"
+              ],
+              [
+                "udma_rx_ico->ll_ico",
+                "ll_ico->input"
+              ],
+              [
+                "udma_tx_ico->l2_shared",
+                "hb_ico->input"
+              ],
+              [
+                "udma_tx_ico->ll_ico",
+                "ll_ico->input"
+              ]
+            ]
+          },
+          "gpio": {
+            "nb_gpio": 32,
+            "archi_files": [
+              "archi/gpio/gpio_v2.h"
+            ],
+            "version": 2,
+            "hal_files": [
+              "hal/gpio/gpio_v2.h"
+            ]
+          },
+          "fll": {
+            "vp_ports": [
+              "input"
+            ],
+            "archi_files": [
+              "archi/fll/fll_v1.h"
+            ],
+            "version": 1,
+            "vp_class": "pulp/fll/fll_v1",
+            "hal_files": [
+              "hal/fll/fll_v1.h"
+            ]
+          },
+          "vp_ports": [
+            "cluster_clock",
+            "cpi0",
+            "jtag0",
+            "spim0",
+            "spim1",
+            "hyper0",
+            "uart0",
+            "spim0",
+            "uart0",
+            "hyper",
+            "jtag0",
+            "cpi0",
+            "clock"
+          ],
+          "l2_shared_1": {
+            "vp_ports": [
+              "input"
+            ],
+            "size": 114688,
+            "vp_class": "memory/memory"
+          },
+          "axi_ico": {
+            "vp_ports": [
+              "cluster",
+              "soc",
+              "input"
+            ],
+            "bandwidth": 4,
+            "mappings": {
+              "cluster": {
+                "base": "0x10000000",
+                "size": "0x400000"
+              },
+              "soc": {
+                "base": "0x1A000000",
+                "size": "0x06000000"
+              }
+            },
+            "vp_class": "interco/router",
+            "latency": 9,
+            "id": 0
+          },
+          "fc": {
+            "features": [
+              "misaligned",
+              "perf"
+            ],
+            "vp_class": "cpu/iss/iss",
+            "power_models": {
+              "clock_gated": {
+                "values": {
+                  "25": {
+                    "1.1": {
+                      "any": "0.9"
+                    },
+                    "1.2": {
+                      "any": "1"
+                    }
+                  }
+                },
+                "type": "linear"
+              },
+              "insn": {
+                "values": {
+                  "25": {
+                    "1.1": {
+                      "any": "30"
+                    },
+                    "1.2": {
+                      "any": "40"
+                    }
+                  }
+                },
+                "type": "linear"
+              }
+            },
+            "defines": [
+              "CORE_PULP_BUILTINS"
+            ],
+            "priv_version": 1.9,
+            "implementation": "zeroriscy",
+            "cluster_id": 31,
+            "version": "zeroriscy",
+            "hal_files": [
+              "hal/riscv/riscv_v4.h",
+              "hal/riscv/builtins_v2.h",
+              "hal/riscv/builtins_v2_emu.h",
+              "hal/riscv/types.h"
+            ],
+            "vp_ports": [
+              "fetch",
+              "data",
+              "irq_ack",
+              "dbg_unit",
+              "bootaddr",
+              "irq_req"
+            ],
+            "fetch_enable": true,
+            "isa": "rv32imcXpulpslim",
+            "boot_addr": "0x1C008000",
+            "gv_isa": [
+              "--pulp-zeroriscy",
+              "--pulp",
+              "--rv32m"
+            ],
+            "perf_counters": true,
+            "archi_files": [
+              "archi/riscv/priv_1_9.h",
+              "archi/riscv/pcer_v1.h"
+            ],
+            "march": "imcXpulpslim",
+            "archi": "riscv",
+            "core_id": 0
+          },
+          "fc_debug": {
+            "version": 1
+          },
+          "cluster": {
+            "nb_pe": 8,
+            "vp_class": "pulp/cluster/cluster",
+            "icache": {
+              "ways": 1,
+              "size": 4096,
+              "enabled": true,
+              "ports": 8,
+              "line_size": 16,
+              "banking_factor": 4,
+              "version": 1
+            },
+            "timer": {
+              "vp_ports": [
+                "irq_itf_0",
+                "irq_itf_1",
+                "input"
+              ],
+              "archi_files": [
+                "archi/timer/timer_v2.h"
+              ],
+              "version": 2,
+              "vp_class": "pulp/timer/timer_v2",
+              "hal_files": [
+                "hal/timer/timer_v2.h"
+              ]
+            },
+            "vp_ports": [
+              "input",
+              "dma_irq",
+              "soc",
+              "dma_irq",
+              "soc",
+              "clock",
+              "input"
+            ],
+            "pe4": {
+              "features": [
+                "misaligned",
+                "perf"
+              ],
+              "vp_class": "cpu/iss/iss",
+              "power_models": {
+                "clock_gated": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "0.9"
+                      },
+                      "1.2": {
+                        "any": "1"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                },
+                "insn": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "30"
+                      },
+                      "1.2": {
+                        "any": "40"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                }
+              },
+              "defines": [
+                "ARCHI_CORE_HAS_PULPV2",
+                "CORE_PULP_BUILTINS"
+              ],
+              "priv_version": 1.9,
+              "implementation": "ri5cy",
+              "cluster_id": 0,
+              "version": "ri5cyv2",
+              "hal_files": [
+                "hal/riscv/riscv_v4.h",
+                "hal/riscv/builtins_v2.h",
+                "hal/riscv/builtins_v2_emu.h",
+                "hal/riscv/types.h"
+              ],
+              "vp_ports": [
+                "halt_status",
+                "data",
+                "fetch",
+                "irq_ack",
+                "ext_counter[11]",
+                "ext_counter[12]",
+                "ext_counter[13]",
+                "ext_counter[14]",
+                "ext_counter[15]",
+                "dbg_unit",
+                "bootaddr",
+                "fetchen",
+                "halt",
+                "irq_req"
+              ],
+              "fetch_enable": null,
+              "isa": "rv32imfcXpulpv2",
+              "boot_addr": null,
+              "gv_isa": [
+                "--pulp",
+                "--rv32m",
+                "--pulpv2",
+                "--pulp-perf-counters",
+                "--pulp-hw-loop",
+                "--itc-external-req",
+                "--fpu",
+                "--fpud",
+                "--shared-fpu"
+              ],
+              "perf_counters": true,
+              "archi_files": [
+                "archi/riscv/priv_1_9.h",
+                "archi/riscv/pcer_v1.h"
+              ],
+              "march": "imfcXpulpv2",
+              "archi": "riscv",
+              "core_id": 4
+            },
+            "l1": {
+              "bank0": {
+                "vp_ports": [
+                  "input"
+                ],
+                "size": 4096,
+                "vp_class": "memory/memory"
+              },
+              "bank7": {
+                "vp_ports": [
+                  "input"
+                ],
+                "size": 4096,
+                "vp_class": "memory/memory"
+              },
+              "vp_class": null,
+              "bank6": {
+                "vp_ports": [
+                  "input"
+                ],
+                "size": 4096,
+                "vp_class": "memory/memory"
+              },
+              "bank15": {
+                "vp_ports": [
+                  "input"
+                ],
+                "size": 4096,
+                "vp_class": "memory/memory"
+              },
+              "bank4": {
+                "vp_ports": [
+                  "input"
+                ],
+                "size": 4096,
+                "vp_class": "memory/memory"
+              },
+              "bank14": {
+                "vp_ports": [
+                  "input"
+                ],
+                "size": 4096,
+                "vp_class": "memory/memory"
+              },
+              "vp_ports": [
+                "in_0",
+                "in_1",
+                "in_2",
+                "in_3",
+                "in_4",
+                "in_5",
+                "in_6",
+                "in_7",
+                "in_8",
+                "in_9",
+                "in_10",
+                "in_11",
+                "in_12",
+                "in_13",
+                "in_14",
+                "in_15"
+              ],
+              "bank13": {
+                "vp_ports": [
+                  "input"
+                ],
+                "size": 4096,
+                "vp_class": "memory/memory"
+              },
+              "alias": true,
+              "bank3": {
+                "vp_ports": [
+                  "input"
+                ],
+                "size": 4096,
+                "vp_class": "memory/memory"
+              },
+              "bank11": {
+                "vp_ports": [
+                  "input"
+                ],
+                "size": 4096,
+                "vp_class": "memory/memory"
+              },
+              "bank2": {
+                "vp_ports": [
+                  "input"
+                ],
+                "size": 4096,
+                "vp_class": "memory/memory"
+              },
+              "has_l1_alias": true,
+              "bank5": {
+                "vp_ports": [
+                  "input"
+                ],
+                "size": 4096,
+                "vp_class": "memory/memory"
+              },
+              "size": 65536,
+              "bank12": {
+                "vp_ports": [
+                  "input"
+                ],
+                "size": 4096,
+                "vp_class": "memory/memory"
+              },
+              "map_base": "0x10000000",
+              "alias_base": "0x00000000",
+              "bank8": {
+                "vp_ports": [
+                  "input"
+                ],
+                "size": 4096,
+                "vp_class": "memory/memory"
+              },
+              "bank10": {
+                "vp_ports": [
+                  "input"
+                ],
+                "size": 4096,
+                "vp_class": "memory/memory"
+              },
+              "bank9": {
+                "vp_ports": [
+                  "input"
+                ],
+                "size": 4096,
+                "vp_class": "memory/memory"
+              },
+              "nb_banks": 16,
+              "bank1": {
+                "vp_ports": [
+                  "input"
+                ],
+                "size": 4096,
+                "vp_class": "memory/memory"
+              },
+              "vp_comps": [
+                "bank0",
+                "bank1",
+                "bank2",
+                "bank3",
+                "bank4",
+                "bank5",
+                "bank6",
+                "bank7",
+                "bank8",
+                "bank9",
+                "bank10",
+                "bank11",
+                "bank12",
+                "bank13",
+                "bank14",
+                "bank15"
+              ],
+              "vp_bindings": [
+                [
+                  "self->in_0",
+                  "bank0->input"
+                ],
+                [
+                  "self->in_1",
+                  "bank1->input"
+                ],
+                [
+                  "self->in_2",
+                  "bank2->input"
+                ],
+                [
+                  "self->in_3",
+                  "bank3->input"
+                ],
+                [
+                  "self->in_4",
+                  "bank4->input"
+                ],
+                [
+                  "self->in_5",
+                  "bank5->input"
+                ],
+                [
+                  "self->in_6",
+                  "bank6->input"
+                ],
+                [
+                  "self->in_7",
+                  "bank7->input"
+                ],
+                [
+                  "self->in_8",
+                  "bank8->input"
+                ],
+                [
+                  "self->in_9",
+                  "bank9->input"
+                ],
+                [
+                  "self->in_10",
+                  "bank10->input"
+                ],
+                [
+                  "self->in_11",
+                  "bank11->input"
+                ],
+                [
+                  "self->in_12",
+                  "bank12->input"
+                ],
+                [
+                  "self->in_13",
+                  "bank13->input"
+                ],
+                [
+                  "self->in_14",
+                  "bank14->input"
+                ],
+                [
+                  "self->in_15",
+                  "bank15->input"
+                ]
+              ]
+            },
+            "periph_ico": {
+              "vp_ports": [
+                "icache_ctrl",
+                "event_unit",
+                "cluster_ctrl",
+                "timer",
+                "dma",
+                "dbg_unit_0",
+                "dbg_unit_1",
+                "dbg_unit_2",
+                "dbg_unit_3",
+                "dbg_unit_4",
+                "dbg_unit_5",
+                "dbg_unit_6",
+                "dbg_unit_7",
+                "cluster_ico",
+                "input"
+              ],
+              "bandwidth": 4,
+              "mappings": {
+                "dbg_unit_2": {
+                  "base": "0x10310000",
+                  "remove_offset": "0x10310000",
+                  "size": "0x8000"
+                },
+                "dbg_unit_6": {
+                  "base": "0x10330000",
+                  "remove_offset": "0x10330000",
+                  "size": "0x8000"
+                },
+                "icache_ctrl": {
+                  "base": "0x10201400",
+                  "remove_offset": "0x10201400",
+                  "size": "0x00000400"
+                },
+                "event_unit": {
+                  "base": "0x10200800",
+                  "remove_offset": "0x10200800",
+                  "size": "0x00000800"
+                },
+                "timer": {
+                  "base": "0x10200400",
+                  "remove_offset": "0x10200400",
+                  "size": "0x00000400"
+                },
+                "dbg_unit_0": {
+                  "base": "0x10300000",
+                  "remove_offset": "0x10300000",
+                  "size": "0x8000"
+                },
+                "dma": {
+                  "base": "0x10201800",
+                  "remove_offset": "0x10201800",
+                  "size": "0x00000400"
+                },
+                "cluster_ctrl": {
+                  "base": "0x10200000",
+                  "remove_offset": "0x10200000",
+                  "size": "0x00000400"
+                },
+                "dbg_unit_1": {
+                  "base": "0x10308000",
+                  "remove_offset": "0x10308000",
+                  "size": "0x8000"
+                },
+                "dbg_unit_4": {
+                  "base": "0x10320000",
+                  "remove_offset": "0x10320000",
+                  "size": "0x8000"
+                },
+                "cluster_ico": {},
+                "dbg_unit_7": {
+                  "base": "0x10338000",
+                  "remove_offset": "0x10338000",
+                  "size": "0x8000"
+                },
+                "dbg_unit_5": {
+                  "base": "0x10328000",
+                  "remove_offset": "0x10328000",
+                  "size": "0x8000"
+                },
+                "dbg_unit_3": {
+                  "base": "0x10318000",
+                  "remove_offset": "0x10318000",
+                  "size": "0x8000"
+                }
+              },
+              "vp_class": "interco/router",
+              "latency": 0,
+              "id": 0
+            },
+            "l1_ico": {
+              "vp_ports": [
+                "event_unit_0",
+                "event_unit_1",
+                "event_unit_2",
+                "event_unit_3",
+                "event_unit_4",
+                "event_unit_5",
+                "event_unit_6",
+                "event_unit_7",
+                "event_unit_alias_0",
+                "event_unit_alias_1",
+                "event_unit_alias_2",
+                "event_unit_alias_3",
+                "event_unit_alias_4",
+                "event_unit_alias_5",
+                "event_unit_alias_6",
+                "event_unit_alias_7",
+                "dma_0",
+                "dma_1",
+                "dma_2",
+                "dma_3",
+                "dma_4",
+                "dma_5",
+                "dma_6",
+                "dma_7",
+                "dma_alias_0",
+                "dma_alias_1",
+                "dma_alias_2",
+                "dma_alias_3",
+                "dma_alias_4",
+                "dma_alias_5",
+                "dma_alias_6",
+                "dma_alias_7",
+                "out_0",
+                "out_1",
+                "out_2",
+                "out_3",
+                "out_4",
+                "out_5",
+                "out_6",
+                "out_7",
+                "out_8",
+                "out_9",
+                "out_10",
+                "out_11",
+                "out_12",
+                "out_13",
+                "out_14",
+                "out_15",
+                "cluster_ico",
+                "dma_in_0",
+                "dma_in_1",
+                "dma_in_2",
+                "dma_in_3",
+                "ext2loc_itf",
+                "ext_counter_0[11]",
+                "ext_counter_1[11]",
+                "ext_counter_2[11]",
+                "ext_counter_3[11]",
+                "ext_counter_4[11]",
+                "ext_counter_5[11]",
+                "ext_counter_6[11]",
+                "ext_counter_7[11]",
+                "ext_counter_0[12]",
+                "ext_counter_1[12]",
+                "ext_counter_2[12]",
+                "ext_counter_3[12]",
+                "ext_counter_4[12]",
+                "ext_counter_5[12]",
+                "ext_counter_6[12]",
+                "ext_counter_7[12]",
+                "ext_counter_0[13]",
+                "ext_counter_1[13]",
+                "ext_counter_2[13]",
+                "ext_counter_3[13]",
+                "ext_counter_4[13]",
+                "ext_counter_5[13]",
+                "ext_counter_6[13]",
+                "ext_counter_7[13]",
+                "ext_counter_0[14]",
+                "ext_counter_1[14]",
+                "ext_counter_2[14]",
+                "ext_counter_3[14]",
+                "ext_counter_4[14]",
+                "ext_counter_5[14]",
+                "ext_counter_6[14]",
+                "ext_counter_7[14]",
+                "ext_counter_0[15]",
+                "ext_counter_1[15]",
+                "ext_counter_2[15]",
+                "ext_counter_3[15]",
+                "ext_counter_4[15]",
+                "ext_counter_5[15]",
+                "ext_counter_6[15]",
+                "ext_counter_7[15]",
+                "data_pe_0",
+                "data_pe_1",
+                "data_pe_2",
+                "data_pe_3",
+                "data_pe_4",
+                "data_pe_5",
+                "data_pe_6",
+                "data_pe_7"
+              ],
+              "pe0_ico": {
+                "vp_ports": [
+                  "dma",
+                  "dma_alias",
+                  "event_unit",
+                  "event_unit_alias",
+                  "cluster_ico",
+                  "l1",
+                  "l1_alias",
+                  "l1_ts",
+                  "l1_ts_alias",
+                  "nb_read[1]",
+                  "nb_write[1]",
+                  "read_stalls[1]",
+                  "write_stalls[1]",
+                  "stalls[0]",
+                  "input"
+                ],
+                "bandwidth": 4,
+                "mappings": {
+                  "event_unit_alias": {
+                    "base": "0x204000",
+                    "remove_offset": "0x204000",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "dma_alias": {
+                    "base": "0x204400",
+                    "remove_offset": "0x204400",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "cluster_ico": {
+                    "id": 1
+                  },
+                  "event_unit": {
+                    "base": "0x10204000",
+                    "remove_offset": "0x10204000",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "l1": {
+                    "base": "0x10000000",
+                    "remove_offset": "0x10000000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "l1_ts_alias": {
+                    "base": "0x100000",
+                    "remove_offset": "0x100000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "dma": {
+                    "base": "0x10204400",
+                    "remove_offset": "0x10204400",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "l1_alias": {
+                    "base": "0x0",
+                    "remove_offset": "0x0",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "l1_ts": {
+                    "base": "0x10100000",
+                    "remove_offset": "0x10100000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  }
+                },
+                "vp_class": "interco/router",
+                "latency": 0,
+                "id": 0
+              },
+              "pe4_ico": {
+                "vp_ports": [
+                  "dma",
+                  "dma_alias",
+                  "event_unit",
+                  "event_unit_alias",
+                  "cluster_ico",
+                  "l1",
+                  "l1_alias",
+                  "l1_ts",
+                  "l1_ts_alias",
+                  "nb_read[1]",
+                  "nb_write[1]",
+                  "read_stalls[1]",
+                  "write_stalls[1]",
+                  "stalls[0]",
+                  "input"
+                ],
+                "bandwidth": 4,
+                "mappings": {
+                  "event_unit_alias": {
+                    "base": "0x204000",
+                    "remove_offset": "0x204000",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "dma_alias": {
+                    "base": "0x204400",
+                    "remove_offset": "0x204400",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "cluster_ico": {
+                    "id": 1
+                  },
+                  "event_unit": {
+                    "base": "0x10204000",
+                    "remove_offset": "0x10204000",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "l1": {
+                    "base": "0x10000000",
+                    "remove_offset": "0x10000000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "l1_ts_alias": {
+                    "base": "0x100000",
+                    "remove_offset": "0x100000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "dma": {
+                    "base": "0x10204400",
+                    "remove_offset": "0x10204400",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "l1_alias": {
+                    "base": "0x0",
+                    "remove_offset": "0x0",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "l1_ts": {
+                    "base": "0x10100000",
+                    "remove_offset": "0x10100000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  }
+                },
+                "vp_class": "interco/router",
+                "latency": 0,
+                "id": 0
+              },
+              "vp_class": null,
+              "ext2loc": {
+                "vp_ports": [
+                  "out",
+                  "input"
+                ],
+                "output_align": 4,
+                "output_width": 4,
+                "vp_class": "interco/converter"
+              },
+              "pe2_ico": {
+                "vp_ports": [
+                  "dma",
+                  "dma_alias",
+                  "event_unit",
+                  "event_unit_alias",
+                  "cluster_ico",
+                  "l1",
+                  "l1_alias",
+                  "l1_ts",
+                  "l1_ts_alias",
+                  "nb_read[1]",
+                  "nb_write[1]",
+                  "read_stalls[1]",
+                  "write_stalls[1]",
+                  "stalls[0]",
+                  "input"
+                ],
+                "bandwidth": 4,
+                "mappings": {
+                  "event_unit_alias": {
+                    "base": "0x204000",
+                    "remove_offset": "0x204000",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "dma_alias": {
+                    "base": "0x204400",
+                    "remove_offset": "0x204400",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "cluster_ico": {
+                    "id": 1
+                  },
+                  "event_unit": {
+                    "base": "0x10204000",
+                    "remove_offset": "0x10204000",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "l1": {
+                    "base": "0x10000000",
+                    "remove_offset": "0x10000000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "l1_ts_alias": {
+                    "base": "0x100000",
+                    "remove_offset": "0x100000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "dma": {
+                    "base": "0x10204400",
+                    "remove_offset": "0x10204400",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "l1_alias": {
+                    "base": "0x0",
+                    "remove_offset": "0x0",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "l1_ts": {
+                    "base": "0x10100000",
+                    "remove_offset": "0x10100000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  }
+                },
+                "vp_class": "interco/router",
+                "latency": 0,
+                "id": 0
+              },
+              "pe5_ico": {
+                "vp_ports": [
+                  "dma",
+                  "dma_alias",
+                  "event_unit",
+                  "event_unit_alias",
+                  "cluster_ico",
+                  "l1",
+                  "l1_alias",
+                  "l1_ts",
+                  "l1_ts_alias",
+                  "nb_read[1]",
+                  "nb_write[1]",
+                  "read_stalls[1]",
+                  "write_stalls[1]",
+                  "stalls[0]",
+                  "input"
+                ],
+                "bandwidth": 4,
+                "mappings": {
+                  "event_unit_alias": {
+                    "base": "0x204000",
+                    "remove_offset": "0x204000",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "dma_alias": {
+                    "base": "0x204400",
+                    "remove_offset": "0x204400",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "cluster_ico": {
+                    "id": 1
+                  },
+                  "event_unit": {
+                    "base": "0x10204000",
+                    "remove_offset": "0x10204000",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "l1": {
+                    "base": "0x10000000",
+                    "remove_offset": "0x10000000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "l1_ts_alias": {
+                    "base": "0x100000",
+                    "remove_offset": "0x100000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "dma": {
+                    "base": "0x10204400",
+                    "remove_offset": "0x10204400",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "l1_alias": {
+                    "base": "0x0",
+                    "remove_offset": "0x0",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "l1_ts": {
+                    "base": "0x10100000",
+                    "remove_offset": "0x10100000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  }
+                },
+                "vp_class": "interco/router",
+                "latency": 0,
+                "id": 0
+              },
+              "pe6_ico": {
+                "vp_ports": [
+                  "dma",
+                  "dma_alias",
+                  "event_unit",
+                  "event_unit_alias",
+                  "cluster_ico",
+                  "l1",
+                  "l1_alias",
+                  "l1_ts",
+                  "l1_ts_alias",
+                  "nb_read[1]",
+                  "nb_write[1]",
+                  "read_stalls[1]",
+                  "write_stalls[1]",
+                  "stalls[0]",
+                  "input"
+                ],
+                "bandwidth": 4,
+                "mappings": {
+                  "event_unit_alias": {
+                    "base": "0x204000",
+                    "remove_offset": "0x204000",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "dma_alias": {
+                    "base": "0x204400",
+                    "remove_offset": "0x204400",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "cluster_ico": {
+                    "id": 1
+                  },
+                  "event_unit": {
+                    "base": "0x10204000",
+                    "remove_offset": "0x10204000",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "l1": {
+                    "base": "0x10000000",
+                    "remove_offset": "0x10000000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "l1_ts_alias": {
+                    "base": "0x100000",
+                    "remove_offset": "0x100000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "dma": {
+                    "base": "0x10204400",
+                    "remove_offset": "0x10204400",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "l1_alias": {
+                    "base": "0x0",
+                    "remove_offset": "0x0",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "l1_ts": {
+                    "base": "0x10100000",
+                    "remove_offset": "0x10100000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  }
+                },
+                "vp_class": "interco/router",
+                "latency": 0,
+                "id": 0
+              },
+              "pe3_ico": {
+                "vp_ports": [
+                  "dma",
+                  "dma_alias",
+                  "event_unit",
+                  "event_unit_alias",
+                  "cluster_ico",
+                  "l1",
+                  "l1_alias",
+                  "l1_ts",
+                  "l1_ts_alias",
+                  "nb_read[1]",
+                  "nb_write[1]",
+                  "read_stalls[1]",
+                  "write_stalls[1]",
+                  "stalls[0]",
+                  "input"
+                ],
+                "bandwidth": 4,
+                "mappings": {
+                  "event_unit_alias": {
+                    "base": "0x204000",
+                    "remove_offset": "0x204000",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "dma_alias": {
+                    "base": "0x204400",
+                    "remove_offset": "0x204400",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "cluster_ico": {
+                    "id": 1
+                  },
+                  "event_unit": {
+                    "base": "0x10204000",
+                    "remove_offset": "0x10204000",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "l1": {
+                    "base": "0x10000000",
+                    "remove_offset": "0x10000000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "l1_ts_alias": {
+                    "base": "0x100000",
+                    "remove_offset": "0x100000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "dma": {
+                    "base": "0x10204400",
+                    "remove_offset": "0x10204400",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "l1_alias": {
+                    "base": "0x0",
+                    "remove_offset": "0x0",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "l1_ts": {
+                    "base": "0x10100000",
+                    "remove_offset": "0x10100000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  }
+                },
+                "vp_class": "interco/router",
+                "latency": 0,
+                "id": 0
+              },
+              "vp_comps": [
+                "pe0_ico",
+                "pe1_ico",
+                "pe2_ico",
+                "pe3_ico",
+                "pe4_ico",
+                "pe5_ico",
+                "pe6_ico",
+                "pe7_ico",
+                "interleaver",
+                "ext2loc"
+              ],
+              "interleaver": {
+                "vp_ports": [
+                  "out_0",
+                  "out_1",
+                  "out_2",
+                  "out_3",
+                  "out_4",
+                  "out_5",
+                  "out_6",
+                  "out_7",
+                  "out_8",
+                  "out_9",
+                  "out_10",
+                  "out_11",
+                  "out_12",
+                  "out_13",
+                  "out_14",
+                  "out_15",
+                  "in_8",
+                  "in_9",
+                  "in_10",
+                  "in_11",
+                  "in_0",
+                  "in_1",
+                  "in_2",
+                  "in_3",
+                  "in_4",
+                  "in_5",
+                  "in_6",
+                  "in_7",
+                  "ts_in_0",
+                  "ts_in_1",
+                  "ts_in_2",
+                  "ts_in_3",
+                  "ts_in_4",
+                  "ts_in_5",
+                  "ts_in_6",
+                  "ts_in_7"
+                ],
+                "nb_slaves": 16,
+                "vp_class": "pulp/cluster/l1_interleaver",
+                "stage_bits": 0,
+                "interleaving_bits": 2,
+                "nb_masters": 12
+              },
+              "pe1_ico": {
+                "vp_ports": [
+                  "dma",
+                  "dma_alias",
+                  "event_unit",
+                  "event_unit_alias",
+                  "cluster_ico",
+                  "l1",
+                  "l1_alias",
+                  "l1_ts",
+                  "l1_ts_alias",
+                  "nb_read[1]",
+                  "nb_write[1]",
+                  "read_stalls[1]",
+                  "write_stalls[1]",
+                  "stalls[0]",
+                  "input"
+                ],
+                "bandwidth": 4,
+                "mappings": {
+                  "event_unit_alias": {
+                    "base": "0x204000",
+                    "remove_offset": "0x204000",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "dma_alias": {
+                    "base": "0x204400",
+                    "remove_offset": "0x204400",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "cluster_ico": {
+                    "id": 1
+                  },
+                  "event_unit": {
+                    "base": "0x10204000",
+                    "remove_offset": "0x10204000",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "l1": {
+                    "base": "0x10000000",
+                    "remove_offset": "0x10000000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "l1_ts_alias": {
+                    "base": "0x100000",
+                    "remove_offset": "0x100000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "dma": {
+                    "base": "0x10204400",
+                    "remove_offset": "0x10204400",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "l1_alias": {
+                    "base": "0x0",
+                    "remove_offset": "0x0",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "l1_ts": {
+                    "base": "0x10100000",
+                    "remove_offset": "0x10100000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  }
+                },
+                "vp_class": "interco/router",
+                "latency": 0,
+                "id": 0
+              },
+              "pe7_ico": {
+                "vp_ports": [
+                  "dma",
+                  "dma_alias",
+                  "event_unit",
+                  "event_unit_alias",
+                  "cluster_ico",
+                  "l1",
+                  "l1_alias",
+                  "l1_ts",
+                  "l1_ts_alias",
+                  "nb_read[1]",
+                  "nb_write[1]",
+                  "read_stalls[1]",
+                  "write_stalls[1]",
+                  "stalls[0]",
+                  "input"
+                ],
+                "bandwidth": 4,
+                "mappings": {
+                  "event_unit_alias": {
+                    "base": "0x204000",
+                    "remove_offset": "0x204000",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "dma_alias": {
+                    "base": "0x204400",
+                    "remove_offset": "0x204400",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "cluster_ico": {
+                    "id": 1
+                  },
+                  "event_unit": {
+                    "base": "0x10204000",
+                    "remove_offset": "0x10204000",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "l1": {
+                    "base": "0x10000000",
+                    "remove_offset": "0x10000000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "l1_ts_alias": {
+                    "base": "0x100000",
+                    "remove_offset": "0x100000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "dma": {
+                    "base": "0x10204400",
+                    "remove_offset": "0x10204400",
+                    "id": 1,
+                    "size": "0x00000400"
+                  },
+                  "l1_alias": {
+                    "base": "0x0",
+                    "remove_offset": "0x0",
+                    "id": 0,
+                    "size": "0x00010000"
+                  },
+                  "l1_ts": {
+                    "base": "0x10100000",
+                    "remove_offset": "0x10100000",
+                    "id": 0,
+                    "size": "0x00010000"
+                  }
+                },
+                "vp_class": "interco/router",
+                "latency": 0,
+                "id": 0
+              },
+              "vp_bindings": [
+                [
+                  "self->dma_in_0",
+                  "interleaver->in_8"
+                ],
+                [
+                  "self->dma_in_1",
+                  "interleaver->in_9"
+                ],
+                [
+                  "self->dma_in_2",
+                  "interleaver->in_10"
+                ],
+                [
+                  "self->dma_in_3",
+                  "interleaver->in_11"
+                ],
+                [
+                  "self->ext2loc_itf",
+                  "ext2loc->input"
+                ],
+                [
+                  "self->ext_counter_0[11]",
+                  "pe0_ico->nb_read[1]"
+                ],
+                [
+                  "self->ext_counter_1[11]",
+                  "pe1_ico->nb_read[1]"
+                ],
+                [
+                  "self->ext_counter_2[11]",
+                  "pe2_ico->nb_read[1]"
+                ],
+                [
+                  "self->ext_counter_3[11]",
+                  "pe3_ico->nb_read[1]"
+                ],
+                [
+                  "self->ext_counter_4[11]",
+                  "pe4_ico->nb_read[1]"
+                ],
+                [
+                  "self->ext_counter_5[11]",
+                  "pe5_ico->nb_read[1]"
+                ],
+                [
+                  "self->ext_counter_6[11]",
+                  "pe6_ico->nb_read[1]"
+                ],
+                [
+                  "self->ext_counter_7[11]",
+                  "pe7_ico->nb_read[1]"
+                ],
+                [
+                  "self->ext_counter_0[12]",
+                  "pe0_ico->nb_write[1]"
+                ],
+                [
+                  "self->ext_counter_1[12]",
+                  "pe1_ico->nb_write[1]"
+                ],
+                [
+                  "self->ext_counter_2[12]",
+                  "pe2_ico->nb_write[1]"
+                ],
+                [
+                  "self->ext_counter_3[12]",
+                  "pe3_ico->nb_write[1]"
+                ],
+                [
+                  "self->ext_counter_4[12]",
+                  "pe4_ico->nb_write[1]"
+                ],
+                [
+                  "self->ext_counter_5[12]",
+                  "pe5_ico->nb_write[1]"
+                ],
+                [
+                  "self->ext_counter_6[12]",
+                  "pe6_ico->nb_write[1]"
+                ],
+                [
+                  "self->ext_counter_7[12]",
+                  "pe7_ico->nb_write[1]"
+                ],
+                [
+                  "self->ext_counter_0[13]",
+                  "pe0_ico->read_stalls[1]"
+                ],
+                [
+                  "self->ext_counter_1[13]",
+                  "pe1_ico->read_stalls[1]"
+                ],
+                [
+                  "self->ext_counter_2[13]",
+                  "pe2_ico->read_stalls[1]"
+                ],
+                [
+                  "self->ext_counter_3[13]",
+                  "pe3_ico->read_stalls[1]"
+                ],
+                [
+                  "self->ext_counter_4[13]",
+                  "pe4_ico->read_stalls[1]"
+                ],
+                [
+                  "self->ext_counter_5[13]",
+                  "pe5_ico->read_stalls[1]"
+                ],
+                [
+                  "self->ext_counter_6[13]",
+                  "pe6_ico->read_stalls[1]"
+                ],
+                [
+                  "self->ext_counter_7[13]",
+                  "pe7_ico->read_stalls[1]"
+                ],
+                [
+                  "self->ext_counter_0[14]",
+                  "pe0_ico->write_stalls[1]"
+                ],
+                [
+                  "self->ext_counter_1[14]",
+                  "pe1_ico->write_stalls[1]"
+                ],
+                [
+                  "self->ext_counter_2[14]",
+                  "pe2_ico->write_stalls[1]"
+                ],
+                [
+                  "self->ext_counter_3[14]",
+                  "pe3_ico->write_stalls[1]"
+                ],
+                [
+                  "self->ext_counter_4[14]",
+                  "pe4_ico->write_stalls[1]"
+                ],
+                [
+                  "self->ext_counter_5[14]",
+                  "pe5_ico->write_stalls[1]"
+                ],
+                [
+                  "self->ext_counter_6[14]",
+                  "pe6_ico->write_stalls[1]"
+                ],
+                [
+                  "self->ext_counter_7[14]",
+                  "pe7_ico->write_stalls[1]"
+                ],
+                [
+                  "self->ext_counter_0[15]",
+                  "pe0_ico->stalls[0]"
+                ],
+                [
+                  "self->ext_counter_1[15]",
+                  "pe1_ico->stalls[0]"
+                ],
+                [
+                  "self->ext_counter_2[15]",
+                  "pe2_ico->stalls[0]"
+                ],
+                [
+                  "self->ext_counter_3[15]",
+                  "pe3_ico->stalls[0]"
+                ],
+                [
+                  "self->ext_counter_4[15]",
+                  "pe4_ico->stalls[0]"
+                ],
+                [
+                  "self->ext_counter_5[15]",
+                  "pe5_ico->stalls[0]"
+                ],
+                [
+                  "self->ext_counter_6[15]",
+                  "pe6_ico->stalls[0]"
+                ],
+                [
+                  "self->ext_counter_7[15]",
+                  "pe7_ico->stalls[0]"
+                ],
+                [
+                  "self->data_pe_0",
+                  "pe0_ico->input"
+                ],
+                [
+                  "self->data_pe_1",
+                  "pe1_ico->input"
+                ],
+                [
+                  "self->data_pe_2",
+                  "pe2_ico->input"
+                ],
+                [
+                  "self->data_pe_3",
+                  "pe3_ico->input"
+                ],
+                [
+                  "self->data_pe_4",
+                  "pe4_ico->input"
+                ],
+                [
+                  "self->data_pe_5",
+                  "pe5_ico->input"
+                ],
+                [
+                  "self->data_pe_6",
+                  "pe6_ico->input"
+                ],
+                [
+                  "self->data_pe_7",
+                  "pe7_ico->input"
+                ],
+                [
+                  "pe0_ico->dma",
+                  "self->dma_0"
+                ],
+                [
+                  "pe0_ico->dma_alias",
+                  "self->dma_alias_0"
+                ],
+                [
+                  "pe0_ico->event_unit",
+                  "self->event_unit_0"
+                ],
+                [
+                  "pe0_ico->event_unit_alias",
+                  "self->event_unit_alias_0"
+                ],
+                [
+                  "pe0_ico->cluster_ico",
+                  "self->cluster_ico"
+                ],
+                [
+                  "pe0_ico->l1",
+                  "interleaver->in_0"
+                ],
+                [
+                  "pe0_ico->l1_alias",
+                  "interleaver->in_0"
+                ],
+                [
+                  "pe0_ico->l1_ts",
+                  "interleaver->ts_in_0"
+                ],
+                [
+                  "pe0_ico->l1_ts_alias",
+                  "interleaver->ts_in_0"
+                ],
+                [
+                  "pe1_ico->dma",
+                  "self->dma_1"
+                ],
+                [
+                  "pe1_ico->dma_alias",
+                  "self->dma_alias_1"
+                ],
+                [
+                  "pe1_ico->event_unit",
+                  "self->event_unit_1"
+                ],
+                [
+                  "pe1_ico->event_unit_alias",
+                  "self->event_unit_alias_1"
+                ],
+                [
+                  "pe1_ico->cluster_ico",
+                  "self->cluster_ico"
+                ],
+                [
+                  "pe1_ico->l1",
+                  "interleaver->in_1"
+                ],
+                [
+                  "pe1_ico->l1_alias",
+                  "interleaver->in_1"
+                ],
+                [
+                  "pe1_ico->l1_ts",
+                  "interleaver->ts_in_1"
+                ],
+                [
+                  "pe1_ico->l1_ts_alias",
+                  "interleaver->ts_in_1"
+                ],
+                [
+                  "pe2_ico->dma",
+                  "self->dma_2"
+                ],
+                [
+                  "pe2_ico->dma_alias",
+                  "self->dma_alias_2"
+                ],
+                [
+                  "pe2_ico->event_unit",
+                  "self->event_unit_2"
+                ],
+                [
+                  "pe2_ico->event_unit_alias",
+                  "self->event_unit_alias_2"
+                ],
+                [
+                  "pe2_ico->cluster_ico",
+                  "self->cluster_ico"
+                ],
+                [
+                  "pe2_ico->l1",
+                  "interleaver->in_2"
+                ],
+                [
+                  "pe2_ico->l1_alias",
+                  "interleaver->in_2"
+                ],
+                [
+                  "pe2_ico->l1_ts",
+                  "interleaver->ts_in_2"
+                ],
+                [
+                  "pe2_ico->l1_ts_alias",
+                  "interleaver->ts_in_2"
+                ],
+                [
+                  "pe3_ico->dma",
+                  "self->dma_3"
+                ],
+                [
+                  "pe3_ico->dma_alias",
+                  "self->dma_alias_3"
+                ],
+                [
+                  "pe3_ico->event_unit",
+                  "self->event_unit_3"
+                ],
+                [
+                  "pe3_ico->event_unit_alias",
+                  "self->event_unit_alias_3"
+                ],
+                [
+                  "pe3_ico->cluster_ico",
+                  "self->cluster_ico"
+                ],
+                [
+                  "pe3_ico->l1",
+                  "interleaver->in_3"
+                ],
+                [
+                  "pe3_ico->l1_alias",
+                  "interleaver->in_3"
+                ],
+                [
+                  "pe3_ico->l1_ts",
+                  "interleaver->ts_in_3"
+                ],
+                [
+                  "pe3_ico->l1_ts_alias",
+                  "interleaver->ts_in_3"
+                ],
+                [
+                  "pe4_ico->dma",
+                  "self->dma_4"
+                ],
+                [
+                  "pe4_ico->dma_alias",
+                  "self->dma_alias_4"
+                ],
+                [
+                  "pe4_ico->event_unit",
+                  "self->event_unit_4"
+                ],
+                [
+                  "pe4_ico->event_unit_alias",
+                  "self->event_unit_alias_4"
+                ],
+                [
+                  "pe4_ico->cluster_ico",
+                  "self->cluster_ico"
+                ],
+                [
+                  "pe4_ico->l1",
+                  "interleaver->in_4"
+                ],
+                [
+                  "pe4_ico->l1_alias",
+                  "interleaver->in_4"
+                ],
+                [
+                  "pe4_ico->l1_ts",
+                  "interleaver->ts_in_4"
+                ],
+                [
+                  "pe4_ico->l1_ts_alias",
+                  "interleaver->ts_in_4"
+                ],
+                [
+                  "pe5_ico->dma",
+                  "self->dma_5"
+                ],
+                [
+                  "pe5_ico->dma_alias",
+                  "self->dma_alias_5"
+                ],
+                [
+                  "pe5_ico->event_unit",
+                  "self->event_unit_5"
+                ],
+                [
+                  "pe5_ico->event_unit_alias",
+                  "self->event_unit_alias_5"
+                ],
+                [
+                  "pe5_ico->cluster_ico",
+                  "self->cluster_ico"
+                ],
+                [
+                  "pe5_ico->l1",
+                  "interleaver->in_5"
+                ],
+                [
+                  "pe5_ico->l1_alias",
+                  "interleaver->in_5"
+                ],
+                [
+                  "pe5_ico->l1_ts",
+                  "interleaver->ts_in_5"
+                ],
+                [
+                  "pe5_ico->l1_ts_alias",
+                  "interleaver->ts_in_5"
+                ],
+                [
+                  "pe6_ico->dma",
+                  "self->dma_6"
+                ],
+                [
+                  "pe6_ico->dma_alias",
+                  "self->dma_alias_6"
+                ],
+                [
+                  "pe6_ico->event_unit",
+                  "self->event_unit_6"
+                ],
+                [
+                  "pe6_ico->event_unit_alias",
+                  "self->event_unit_alias_6"
+                ],
+                [
+                  "pe6_ico->cluster_ico",
+                  "self->cluster_ico"
+                ],
+                [
+                  "pe6_ico->l1",
+                  "interleaver->in_6"
+                ],
+                [
+                  "pe6_ico->l1_alias",
+                  "interleaver->in_6"
+                ],
+                [
+                  "pe6_ico->l1_ts",
+                  "interleaver->ts_in_6"
+                ],
+                [
+                  "pe6_ico->l1_ts_alias",
+                  "interleaver->ts_in_6"
+                ],
+                [
+                  "pe7_ico->dma",
+                  "self->dma_7"
+                ],
+                [
+                  "pe7_ico->dma_alias",
+                  "self->dma_alias_7"
+                ],
+                [
+                  "pe7_ico->event_unit",
+                  "self->event_unit_7"
+                ],
+                [
+                  "pe7_ico->event_unit_alias",
+                  "self->event_unit_alias_7"
+                ],
+                [
+                  "pe7_ico->cluster_ico",
+                  "self->cluster_ico"
+                ],
+                [
+                  "pe7_ico->l1",
+                  "interleaver->in_7"
+                ],
+                [
+                  "pe7_ico->l1_alias",
+                  "interleaver->in_7"
+                ],
+                [
+                  "pe7_ico->l1_ts",
+                  "interleaver->ts_in_7"
+                ],
+                [
+                  "pe7_ico->l1_ts_alias",
+                  "interleaver->ts_in_7"
+                ],
+                [
+                  "interleaver->out_0",
+                  "self->out_0"
+                ],
+                [
+                  "interleaver->out_1",
+                  "self->out_1"
+                ],
+                [
+                  "interleaver->out_2",
+                  "self->out_2"
+                ],
+                [
+                  "interleaver->out_3",
+                  "self->out_3"
+                ],
+                [
+                  "interleaver->out_4",
+                  "self->out_4"
+                ],
+                [
+                  "interleaver->out_5",
+                  "self->out_5"
+                ],
+                [
+                  "interleaver->out_6",
+                  "self->out_6"
+                ],
+                [
+                  "interleaver->out_7",
+                  "self->out_7"
+                ],
+                [
+                  "interleaver->out_8",
+                  "self->out_8"
+                ],
+                [
+                  "interleaver->out_9",
+                  "self->out_9"
+                ],
+                [
+                  "interleaver->out_10",
+                  "self->out_10"
+                ],
+                [
+                  "interleaver->out_11",
+                  "self->out_11"
+                ],
+                [
+                  "interleaver->out_12",
+                  "self->out_12"
+                ],
+                [
+                  "interleaver->out_13",
+                  "self->out_13"
+                ],
+                [
+                  "interleaver->out_14",
+                  "self->out_14"
+                ],
+                [
+                  "interleaver->out_15",
+                  "self->out_15"
+                ],
+                [
+                  "ext2loc->out",
+                  "interleaver->in_8"
+                ]
+              ]
+            },
+            "pe5": {
+              "features": [
+                "misaligned",
+                "perf"
+              ],
+              "vp_class": "cpu/iss/iss",
+              "power_models": {
+                "clock_gated": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "0.9"
+                      },
+                      "1.2": {
+                        "any": "1"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                },
+                "insn": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "30"
+                      },
+                      "1.2": {
+                        "any": "40"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                }
+              },
+              "defines": [
+                "ARCHI_CORE_HAS_PULPV2",
+                "CORE_PULP_BUILTINS"
+              ],
+              "priv_version": 1.9,
+              "implementation": "ri5cy",
+              "cluster_id": 0,
+              "version": "ri5cyv2",
+              "hal_files": [
+                "hal/riscv/riscv_v4.h",
+                "hal/riscv/builtins_v2.h",
+                "hal/riscv/builtins_v2_emu.h",
+                "hal/riscv/types.h"
+              ],
+              "vp_ports": [
+                "halt_status",
+                "data",
+                "fetch",
+                "irq_ack",
+                "ext_counter[11]",
+                "ext_counter[12]",
+                "ext_counter[13]",
+                "ext_counter[14]",
+                "ext_counter[15]",
+                "dbg_unit",
+                "bootaddr",
+                "fetchen",
+                "halt",
+                "irq_req"
+              ],
+              "fetch_enable": null,
+              "isa": "rv32imfcXpulpv2",
+              "boot_addr": null,
+              "gv_isa": [
+                "--pulp",
+                "--rv32m",
+                "--pulpv2",
+                "--pulp-perf-counters",
+                "--pulp-hw-loop",
+                "--itc-external-req",
+                "--fpu",
+                "--fpud",
+                "--shared-fpu"
+              ],
+              "perf_counters": true,
+              "archi_files": [
+                "archi/riscv/priv_1_9.h",
+                "archi/riscv/pcer_v1.h"
+              ],
+              "march": "imfcXpulpv2",
+              "archi": "riscv",
+              "core_id": 5
+            },
+            "icache_ctrl": {
+              "vp_ports": [
+                "input"
+              ],
+              "version": 2,
+              "vp_class": "pulp/icache_ctrl/icache_ctrl_v2",
+              "hal_files": [
+                "hal/icache/icache_ctrl_v2.h"
+              ]
+            },
+            "cluster_ctrl": {
+              "vp_ports": [
+                "bootaddr_0",
+                "bootaddr_1",
+                "bootaddr_2",
+                "bootaddr_3",
+                "bootaddr_4",
+                "bootaddr_5",
+                "bootaddr_6",
+                "bootaddr_7",
+                "fetchen_0",
+                "fetchen_1",
+                "fetchen_2",
+                "fetchen_3",
+                "fetchen_4",
+                "fetchen_5",
+                "fetchen_6",
+                "fetchen_7",
+                "halt_0",
+                "halt_1",
+                "halt_2",
+                "halt_3",
+                "halt_4",
+                "halt_5",
+                "halt_6",
+                "halt_7",
+                "input",
+                "core_halt_0",
+                "core_halt_1",
+                "core_halt_2",
+                "core_halt_3",
+                "core_halt_4",
+                "core_halt_5",
+                "core_halt_6",
+                "core_halt_7"
+              ],
+              "vp_class": "pulp/cluster/cluster_ctrl_v2",
+              "nb_core": 8,
+              "archi_files": [
+                "archi/cluster_ctrl/cluster_ctrl_v2.h"
+              ],
+              "version": 2,
+              "hal_files": [
+                "hal/cluster_ctrl/cluster_ctrl_v2.h"
+              ]
+            },
+            "pe1": {
+              "features": [
+                "misaligned",
+                "perf"
+              ],
+              "vp_class": "cpu/iss/iss",
+              "power_models": {
+                "clock_gated": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "0.9"
+                      },
+                      "1.2": {
+                        "any": "1"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                },
+                "insn": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "30"
+                      },
+                      "1.2": {
+                        "any": "40"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                }
+              },
+              "defines": [
+                "ARCHI_CORE_HAS_PULPV2",
+                "CORE_PULP_BUILTINS"
+              ],
+              "priv_version": 1.9,
+              "implementation": "ri5cy",
+              "cluster_id": 0,
+              "version": "ri5cyv2",
+              "hal_files": [
+                "hal/riscv/riscv_v4.h",
+                "hal/riscv/builtins_v2.h",
+                "hal/riscv/builtins_v2_emu.h",
+                "hal/riscv/types.h"
+              ],
+              "vp_ports": [
+                "halt_status",
+                "data",
+                "fetch",
+                "irq_ack",
+                "ext_counter[11]",
+                "ext_counter[12]",
+                "ext_counter[13]",
+                "ext_counter[14]",
+                "ext_counter[15]",
+                "dbg_unit",
+                "bootaddr",
+                "fetchen",
+                "halt",
+                "irq_req"
+              ],
+              "fetch_enable": null,
+              "isa": "rv32imfcXpulpv2",
+              "boot_addr": null,
+              "gv_isa": [
+                "--pulp",
+                "--rv32m",
+                "--pulpv2",
+                "--pulp-perf-counters",
+                "--pulp-hw-loop",
+                "--itc-external-req",
+                "--fpu",
+                "--fpud",
+                "--shared-fpu"
+              ],
+              "perf_counters": true,
+              "archi_files": [
+                "archi/riscv/priv_1_9.h",
+                "archi/riscv/pcer_v1.h"
+              ],
+              "march": "imfcXpulpv2",
+              "archi": "riscv",
+              "core_id": 1
+            },
+            "demux_periph_ico": {
+              "latency": 0,
+              "bandwidth": 4,
+              "id": 0,
+              "mappings": {
+                "demux_event_unit": {
+                  "base": "0x0",
+                  "size": "0x00000400"
+                }
+              },
+              "vp_class": "interco/router"
+            },
+            "event_unit": {
+              "vp_ports": [
+                "irq_req_0",
+                "irq_req_1",
+                "irq_req_2",
+                "irq_req_3",
+                "irq_req_4",
+                "irq_req_5",
+                "irq_req_6",
+                "irq_req_7",
+                "input",
+                "demux_in_0",
+                "demux_in_1",
+                "demux_in_2",
+                "demux_in_3",
+                "demux_in_4",
+                "demux_in_5",
+                "demux_in_6",
+                "demux_in_7",
+                "in_event_8_pe_0",
+                "in_event_8_pe_1",
+                "in_event_8_pe_2",
+                "in_event_8_pe_3",
+                "in_event_8_pe_4",
+                "in_event_8_pe_5",
+                "in_event_8_pe_6",
+                "in_event_8_pe_7",
+                "in_event_9_pe_0",
+                "in_event_9_pe_1",
+                "in_event_9_pe_2",
+                "in_event_9_pe_3",
+                "in_event_9_pe_4",
+                "in_event_9_pe_5",
+                "in_event_9_pe_6",
+                "in_event_9_pe_7",
+                "in_event_22_pe_0",
+                "in_event_22_pe_1",
+                "in_event_22_pe_2",
+                "in_event_22_pe_3",
+                "in_event_22_pe_4",
+                "in_event_22_pe_5",
+                "in_event_22_pe_6",
+                "in_event_22_pe_7",
+                "in_event_10_pe_0",
+                "in_event_10_pe_1",
+                "in_event_10_pe_2",
+                "in_event_10_pe_3",
+                "in_event_10_pe_4",
+                "in_event_10_pe_5",
+                "in_event_10_pe_6",
+                "in_event_10_pe_7",
+                "in_event_11_pe_0",
+                "in_event_11_pe_1",
+                "in_event_11_pe_2",
+                "in_event_11_pe_3",
+                "in_event_11_pe_4",
+                "in_event_11_pe_5",
+                "in_event_11_pe_6",
+                "in_event_11_pe_7",
+                "irq_ack_0",
+                "irq_ack_1",
+                "irq_ack_2",
+                "irq_ack_3",
+                "irq_ack_4",
+                "irq_ack_5",
+                "irq_ack_6",
+                "irq_ack_7"
+              ],
+              "vp_class": "pulp/event_unit/eu_v3",
+              "nb_core": 8,
+              "regmap": {
+                "areas": {
+                  "global": {
+                    "barriers": {
+                      "areas": {
+                        "barrier": {
+                          "number": 16,
+                          "size": "0x0020",
+                          "offset": "0x0000"
+                        }
+                      },
+                      "size": "0x0200",
+                      "offset": "0x0400"
+                    },
+                    "ext_events": {
+                      "size": "0x0080",
+                      "offset": "0x0780"
+                    },
+                    "soc_events": {
+                      "size": "0x0080",
+                      "offset": "0x0700"
+                    },
+                    "cores": {
+                      "areas": {
+                        "core": {
+                          "number": 16,
+                          "size": "0x0040",
+                          "offset": "0x0000"
+                        }
+                      },
+                      "size": "0x0400",
+                      "offset": "0x0000"
+                    },
+                    "sw_events": {
+                      "size": "0x0100",
+                      "offset": "0x0600"
+                    },
+                    "mutex": {
+                      "size": "0x0040"
+                    },
+                    "dispatch": {
+                      "size": "0x0040"
+                    }
+                  },
+                  "demux": {
+                    "barriers": {
+                      "size": "0x0200",
+                      "offset": "0x0200"
+                    },
+                    "dispatch": {
+                      "size": "0x0040",
+                      "offset": "0x0080"
+                    },
+                    "sw_events": {
+                      "size": "0x0100",
+                      "offset": "0x0100"
+                    },
+                    "mutex": {
+                      "size": "0x0040",
+                      "offset": "0x00C0"
+                    },
+                    "core": {
+                      "size": "0x0040",
+                      "offset": "0x0000"
+                    }
+                  }
+                },
+                "registers": {
+                  "barr_status": {
+                    "areas": [
+                      "demux/barriers",
+                      "global/barriers"
+                    ],
+                    "width": 32,
+                    "offset": "0x04"
+                  },
+                  "event_wait_clear": {
+                    "areas": [
+                      "demux/core",
+                      "global/cores/core"
+                    ],
+                    "width": 32,
+                    "offset": "0x3C"
+                  },
+                  "sw_events_mask_or": {
+                    "areas": [
+                      "demux/core",
+                      "global/cores/core"
+                    ],
+                    "width": 32,
+                    "offset": "0x34"
+                  },
+                  "mask_irq_and": {
+                    "areas": [
+                      "demux/core",
+                      "global/cores/core"
+                    ],
+                    "width": 32,
+                    "offset": "0x10"
+                  },
+                  "barr_trigger_mask": {
+                    "areas": [
+                      "demux/barriers",
+                      "global/barriers"
+                    ],
+                    "width": 32,
+                    "offset": "0x00"
+                  },
+                  "barr_status_summary": {
+                    "areas": [
+                      "demux/barriers",
+                      "global/barriers"
+                    ],
+                    "width": 32,
+                    "offset": "0x08"
+                  },
+                  "mask_irq": {
+                    "areas": [
+                      "demux/core",
+                      "global/cores/core"
+                    ],
+                    "width": 32,
+                    "offset": "0x0C"
+                  },
+                  "trigg_sw_event_wait_clear": {
+                    "number": 16,
+                    "offset": "0x80",
+                    "width": 32,
+                    "areas": [
+                      "demux/sw_events",
+                      "global/sw_events"
+                    ]
+                  },
+                  "barr_trigger_wait_clear": {
+                    "areas": [
+                      "demux/barriers",
+                      "global/barriers"
+                    ],
+                    "width": 32,
+                    "offset": "0x1C"
+                  },
+                  "mask_or": {
+                    "areas": [
+                      "demux/core",
+                      "global/cores/core"
+                    ],
+                    "width": 32,
+                    "offset": "0x08"
+                  },
+                  "trigg_sw_event_wait": {
+                    "number": 16,
+                    "offset": "0x40",
+                    "width": 32,
+                    "areas": [
+                      "demux/sw_events",
+                      "global/sw_events"
+                    ]
+                  },
+                  "dispatch_fifo_access": {
+                    "areas": [
+                      "demux/dispatch",
+                      "global/dispatch"
+                    ],
+                    "width": 32,
+                    "offset": "0x00"
+                  },
+                  "sw_events_mask": {
+                    "areas": [
+                      "demux/core",
+                      "global/cores/core"
+                    ],
+                    "width": 32,
+                    "offset": "0x2C"
+                  },
+                  "trigg_sw_event": {
+                    "number": 16,
+                    "offset": "0x00",
+                    "width": 32,
+                    "areas": [
+                      "demux/sw_events",
+                      "global/sw_events"
+                    ]
+                  },
+                  "buffer_clear": {
+                    "areas": [
+                      "demux/core",
+                      "global/cores/core"
+                    ],
+                    "width": 32,
+                    "offset": "0x28"
+                  },
+                  "sw_events_mask_and": {
+                    "areas": [
+                      "demux/core",
+                      "global/cores/core"
+                    ],
+                    "width": 32,
+                    "offset": "0x30"
+                  },
+                  "barr_trigger_self": {
+                    "areas": [
+                      "demux/barriers",
+                      "global/barriers"
+                    ],
+                    "width": 32,
+                    "offset": "0x14"
+                  },
+                  "mask": {
+                    "areas": [
+                      "demux/core",
+                      "global/cores/core"
+                    ],
+                    "width": 32,
+                    "offset": "0x00"
+                  },
+                  "mask_and": {
+                    "areas": [
+                      "demux/core",
+                      "global/cores/core"
+                    ],
+                    "width": 32,
+                    "offset": "0x04"
+                  },
+                  "barr_trigger": {
+                    "areas": [
+                      "demux/barriers",
+                      "global/barriers"
+                    ],
+                    "width": 32,
+                    "offset": "0x10"
+                  },
+                  "soc_events_current_event": {
+                    "areas": [
+                      "global/soc_events"
+                    ],
+                    "bitfield": {
+                      "event_id": {
+                        "width": 9,
+                        "bit": 0
+                      },
+                      "valid": {
+                        "width": 1,
+                        "bit": 31
+                      }
+                    },
+                    "width": 32,
+                    "offset": "0x00"
+                  },
+                  "barr_trigger_wait": {
+                    "areas": [
+                      "demux/barriers",
+                      "global/barriers"
+                    ],
+                    "width": 32,
+                    "offset": "0x18"
+                  },
+                  "buffer_irq_masked": {
+                    "areas": [
+                      "demux/core",
+                      "global/cores/core"
+                    ],
+                    "width": 32,
+                    "offset": "0x24"
+                  },
+                  "buffer": {
+                    "areas": [
+                      "demux/core",
+                      "global/cores/core"
+                    ],
+                    "width": 32,
+                    "offset": "0x1C"
+                  },
+                  "event_wait": {
+                    "areas": [
+                      "demux/core",
+                      "global/cores/core"
+                    ],
+                    "width": 32,
+                    "offset": "0x38"
+                  },
+                  "dispatch_team_config": {
+                    "areas": [
+                      "demux/dispatch",
+                      "global/dispatch"
+                    ],
+                    "width": 32,
+                    "offset": "0x04"
+                  },
+                  "barr_target_mask": {
+                    "areas": [
+                      "demux/barriers",
+                      "global/barriers"
+                    ],
+                    "width": 32,
+                    "offset": "0x0C"
+                  },
+                  "status": {
+                    "areas": [
+                      "demux/core",
+                      "global/cores/core"
+                    ],
+                    "width": 32,
+                    "offset": "0x18"
+                  },
+                  "mask_irq_or": {
+                    "areas": [
+                      "demux/core",
+                      "global/cores/core"
+                    ],
+                    "width": 32,
+                    "offset": "0x14"
+                  },
+                  "buffer_masked": {
+                    "areas": [
+                      "demux/core",
+                      "global/cores/core"
+                    ],
+                    "width": 32,
+                    "offset": "0x20"
+                  }
+                }
+              },
+              "properties": {
+                "barriers": {
+                  "nb_barriers": 8
+                },
+                "soc_event": {
+                  "fifo_event": 27,
+                  "nb_fifo_events": 8
+                },
+                "events": {
+                  "barrier": 16,
+                  "mutex": 17,
+                  "dispatch": 18
+                },
+                "mutex": {
+                  "nb_mutexes": 1
+                },
+                "dispatch": {
+                  "size": 8
+                }
+              },
+              "archi_files": [
+                "archi/eu/eu_v3.h"
+              ],
+              "version": 3,
+              "hal_files": [
+                "hal/eu/eu_v3.h"
+              ]
+            },
+            "pe": {
+              "features": [
+                "misaligned",
+                "perf"
+              ],
+              "vp_class": "cpu/iss/iss",
+              "power_models": {
+                "clock_gated": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "0.9"
+                      },
+                      "1.2": {
+                        "any": "1"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                },
+                "insn": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "30"
+                      },
+                      "1.2": {
+                        "any": "40"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                }
+              },
+              "defines": [
+                "ARCHI_CORE_HAS_PULPV2",
+                "CORE_PULP_BUILTINS"
+              ],
+              "priv_version": 1.9,
+              "implementation": "ri5cy",
+              "cluster_id": 0,
+              "version": "ri5cyv2",
+              "hal_files": [
+                "hal/riscv/riscv_v4.h",
+                "hal/riscv/builtins_v2.h",
+                "hal/riscv/builtins_v2_emu.h",
+                "hal/riscv/types.h"
+              ],
+              "isa": "rv32imfcXpulpv2",
+              "boot_addr": "0x1C000000",
+              "gv_isa": [
+                "--pulp",
+                "--rv32m",
+                "--pulpv2",
+                "--pulp-perf-counters",
+                "--pulp-hw-loop",
+                "--itc-external-req",
+                "--fpu",
+                "--fpud",
+                "--shared-fpu"
+              ],
+              "perf_counters": true,
+              "archi_files": [
+                "archi/riscv/priv_1_9.h",
+                "archi/riscv/pcer_v1.h"
+              ],
+              "march": "imfcXpulpv2",
+              "archi": "riscv",
+              "core_id": 0
+            },
+            "version": 5,
+            "pe0": {
+              "features": [
+                "misaligned",
+                "perf"
+              ],
+              "vp_class": "cpu/iss/iss",
+              "power_models": {
+                "clock_gated": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "0.9"
+                      },
+                      "1.2": {
+                        "any": "1"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                },
+                "insn": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "30"
+                      },
+                      "1.2": {
+                        "any": "40"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                }
+              },
+              "defines": [
+                "ARCHI_CORE_HAS_PULPV2",
+                "CORE_PULP_BUILTINS"
+              ],
+              "priv_version": 1.9,
+              "implementation": "ri5cy",
+              "cluster_id": 0,
+              "version": "ri5cyv2",
+              "hal_files": [
+                "hal/riscv/riscv_v4.h",
+                "hal/riscv/builtins_v2.h",
+                "hal/riscv/builtins_v2_emu.h",
+                "hal/riscv/types.h"
+              ],
+              "vp_ports": [
+                "halt_status",
+                "data",
+                "fetch",
+                "irq_ack",
+                "ext_counter[11]",
+                "ext_counter[12]",
+                "ext_counter[13]",
+                "ext_counter[14]",
+                "ext_counter[15]",
+                "dbg_unit",
+                "bootaddr",
+                "fetchen",
+                "halt",
+                "irq_req"
+              ],
+              "fetch_enable": null,
+              "isa": "rv32imfcXpulpv2",
+              "boot_addr": null,
+              "gv_isa": [
+                "--pulp",
+                "--rv32m",
+                "--pulpv2",
+                "--pulp-perf-counters",
+                "--pulp-hw-loop",
+                "--itc-external-req",
+                "--fpu",
+                "--fpud",
+                "--shared-fpu"
+              ],
+              "perf_counters": true,
+              "archi_files": [
+                "archi/riscv/priv_1_9.h",
+                "archi/riscv/pcer_v1.h"
+              ],
+              "march": "imfcXpulpv2",
+              "archi": "riscv",
+              "core_id": 0
+            },
+            "dma": {
+              "vp_class": "pulp/mchan/mchan_v6",
+              "nb_channels": 9,
+              "tcdm_addr_width": 16,
+              "max_nb_ext_read_req": 8,
+              "core_queue_depth": 2,
+              "version": 6,
+              "hal_files": [
+                "hal/dma/mchan_v6.h"
+              ],
+              "vp_ports": [
+                "ext_irq_itf",
+                "event_itf_0",
+                "event_itf_1",
+                "event_itf_2",
+                "event_itf_3",
+                "event_itf_4",
+                "event_itf_5",
+                "event_itf_6",
+                "event_itf_7",
+                "irq_itf_0",
+                "irq_itf_1",
+                "irq_itf_2",
+                "irq_itf_3",
+                "irq_itf_4",
+                "irq_itf_5",
+                "irq_itf_6",
+                "irq_itf_7",
+                "ext_itf",
+                "loc_itf_0",
+                "loc_itf_1",
+                "loc_itf_2",
+                "loc_itf_3",
+                "in_8",
+                "in_0",
+                "in_1",
+                "in_2",
+                "in_3",
+                "in_4",
+                "in_5",
+                "in_6",
+                "in_7"
+              ],
+              "nb_loc_ports": 4,
+              "max_nb_ext_write_req": 8,
+              "max_burst_length": 256,
+              "is_64": false,
+              "archi_files": [
+                "archi/dma/mchan_v6.h"
+              ],
+              "global_queue_depth": 8
+            },
+            "pe6": {
+              "features": [
+                "misaligned",
+                "perf"
+              ],
+              "vp_class": "cpu/iss/iss",
+              "power_models": {
+                "clock_gated": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "0.9"
+                      },
+                      "1.2": {
+                        "any": "1"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                },
+                "insn": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "30"
+                      },
+                      "1.2": {
+                        "any": "40"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                }
+              },
+              "defines": [
+                "ARCHI_CORE_HAS_PULPV2",
+                "CORE_PULP_BUILTINS"
+              ],
+              "priv_version": 1.9,
+              "implementation": "ri5cy",
+              "cluster_id": 0,
+              "version": "ri5cyv2",
+              "hal_files": [
+                "hal/riscv/riscv_v4.h",
+                "hal/riscv/builtins_v2.h",
+                "hal/riscv/builtins_v2_emu.h",
+                "hal/riscv/types.h"
+              ],
+              "vp_ports": [
+                "halt_status",
+                "data",
+                "fetch",
+                "irq_ack",
+                "ext_counter[11]",
+                "ext_counter[12]",
+                "ext_counter[13]",
+                "ext_counter[14]",
+                "ext_counter[15]",
+                "dbg_unit",
+                "bootaddr",
+                "fetchen",
+                "halt",
+                "irq_req"
+              ],
+              "fetch_enable": null,
+              "isa": "rv32imfcXpulpv2",
+              "boot_addr": null,
+              "gv_isa": [
+                "--pulp",
+                "--rv32m",
+                "--pulpv2",
+                "--pulp-perf-counters",
+                "--pulp-hw-loop",
+                "--itc-external-req",
+                "--fpu",
+                "--fpud",
+                "--shared-fpu"
+              ],
+              "perf_counters": true,
+              "archi_files": [
+                "archi/riscv/priv_1_9.h",
+                "archi/riscv/pcer_v1.h"
+              ],
+              "march": "imfcXpulpv2",
+              "archi": "riscv",
+              "core_id": 6
+            },
+            "pe3": {
+              "features": [
+                "misaligned",
+                "perf"
+              ],
+              "vp_class": "cpu/iss/iss",
+              "power_models": {
+                "clock_gated": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "0.9"
+                      },
+                      "1.2": {
+                        "any": "1"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                },
+                "insn": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "30"
+                      },
+                      "1.2": {
+                        "any": "40"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                }
+              },
+              "defines": [
+                "ARCHI_CORE_HAS_PULPV2",
+                "CORE_PULP_BUILTINS"
+              ],
+              "priv_version": 1.9,
+              "implementation": "ri5cy",
+              "cluster_id": 0,
+              "version": "ri5cyv2",
+              "hal_files": [
+                "hal/riscv/riscv_v4.h",
+                "hal/riscv/builtins_v2.h",
+                "hal/riscv/builtins_v2_emu.h",
+                "hal/riscv/types.h"
+              ],
+              "vp_ports": [
+                "halt_status",
+                "data",
+                "fetch",
+                "irq_ack",
+                "ext_counter[11]",
+                "ext_counter[12]",
+                "ext_counter[13]",
+                "ext_counter[14]",
+                "ext_counter[15]",
+                "dbg_unit",
+                "bootaddr",
+                "fetchen",
+                "halt",
+                "irq_req"
+              ],
+              "fetch_enable": null,
+              "isa": "rv32imfcXpulpv2",
+              "boot_addr": null,
+              "gv_isa": [
+                "--pulp",
+                "--rv32m",
+                "--pulpv2",
+                "--pulp-perf-counters",
+                "--pulp-hw-loop",
+                "--itc-external-req",
+                "--fpu",
+                "--fpud",
+                "--shared-fpu"
+              ],
+              "perf_counters": true,
+              "archi_files": [
+                "archi/riscv/priv_1_9.h",
+                "archi/riscv/pcer_v1.h"
+              ],
+              "march": "imfcXpulpv2",
+              "archi": "riscv",
+              "core_id": 3
+            },
+            "pe2": {
+              "features": [
+                "misaligned",
+                "perf"
+              ],
+              "vp_class": "cpu/iss/iss",
+              "power_models": {
+                "clock_gated": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "0.9"
+                      },
+                      "1.2": {
+                        "any": "1"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                },
+                "insn": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "30"
+                      },
+                      "1.2": {
+                        "any": "40"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                }
+              },
+              "defines": [
+                "ARCHI_CORE_HAS_PULPV2",
+                "CORE_PULP_BUILTINS"
+              ],
+              "priv_version": 1.9,
+              "implementation": "ri5cy",
+              "cluster_id": 0,
+              "version": "ri5cyv2",
+              "hal_files": [
+                "hal/riscv/riscv_v4.h",
+                "hal/riscv/builtins_v2.h",
+                "hal/riscv/builtins_v2_emu.h",
+                "hal/riscv/types.h"
+              ],
+              "vp_ports": [
+                "halt_status",
+                "data",
+                "fetch",
+                "irq_ack",
+                "ext_counter[11]",
+                "ext_counter[12]",
+                "ext_counter[13]",
+                "ext_counter[14]",
+                "ext_counter[15]",
+                "dbg_unit",
+                "bootaddr",
+                "fetchen",
+                "halt",
+                "irq_req"
+              ],
+              "fetch_enable": null,
+              "isa": "rv32imfcXpulpv2",
+              "boot_addr": null,
+              "gv_isa": [
+                "--pulp",
+                "--rv32m",
+                "--pulpv2",
+                "--pulp-perf-counters",
+                "--pulp-hw-loop",
+                "--itc-external-req",
+                "--fpu",
+                "--fpud",
+                "--shared-fpu"
+              ],
+              "perf_counters": true,
+              "archi_files": [
+                "archi/riscv/priv_1_9.h",
+                "archi/riscv/pcer_v1.h"
+              ],
+              "march": "imfcXpulpv2",
+              "archi": "riscv",
+              "core_id": 2
+            },
+            "cluster_ico": {
+              "vp_ports": [
+                "soc",
+                "l1",
+                "periph_ico",
+                "periph_ico_alias",
+                "input"
+              ],
+              "bandwidth": 4,
+              "mappings": {
+                "periph_ico": {
+                  "base": "0x10200000",
+                  "size": "0x00200000"
+                },
+                "periph_ico_alias": {
+                  "add_offset": "268435456",
+                  "base": "0x00200000",
+                  "size": "0x00200000"
+                },
+                "soc": {},
+                "l1": {
+                  "base": "0x10000000",
+                  "remove_offset": "0x10000000",
+                  "size": "0x00010000"
+                }
+              },
+              "vp_class": "interco/router",
+              "latency": 2,
+              "id": 0
+            },
+            "pe7": {
+              "features": [
+                "misaligned",
+                "perf"
+              ],
+              "vp_class": "cpu/iss/iss",
+              "power_models": {
+                "clock_gated": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "0.9"
+                      },
+                      "1.2": {
+                        "any": "1"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                },
+                "insn": {
+                  "values": {
+                    "25": {
+                      "1.1": {
+                        "any": "30"
+                      },
+                      "1.2": {
+                        "any": "40"
+                      }
+                    }
+                  },
+                  "type": "linear"
+                }
+              },
+              "defines": [
+                "ARCHI_CORE_HAS_PULPV2",
+                "CORE_PULP_BUILTINS"
+              ],
+              "priv_version": 1.9,
+              "implementation": "ri5cy",
+              "cluster_id": 0,
+              "version": "ri5cyv2",
+              "hal_files": [
+                "hal/riscv/riscv_v4.h",
+                "hal/riscv/builtins_v2.h",
+                "hal/riscv/builtins_v2_emu.h",
+                "hal/riscv/types.h"
+              ],
+              "vp_ports": [
+                "halt_status",
+                "data",
+                "fetch",
+                "irq_ack",
+                "ext_counter[11]",
+                "ext_counter[12]",
+                "ext_counter[13]",
+                "ext_counter[14]",
+                "ext_counter[15]",
+                "dbg_unit",
+                "bootaddr",
+                "fetchen",
+                "halt",
+                "irq_req"
+              ],
+              "fetch_enable": null,
+              "isa": "rv32imfcXpulpv2",
+              "boot_addr": null,
+              "gv_isa": [
+                "--pulp",
+                "--rv32m",
+                "--pulpv2",
+                "--pulp-perf-counters",
+                "--pulp-hw-loop",
+                "--itc-external-req",
+                "--fpu",
+                "--fpud",
+                "--shared-fpu"
+              ],
+              "perf_counters": true,
+              "archi_files": [
+                "archi/riscv/priv_1_9.h",
+                "archi/riscv/pcer_v1.h"
+              ],
+              "march": "imfcXpulpv2",
+              "archi": "riscv",
+              "core_id": 7
+            },
+            "vp_comps": [
+              "cluster_ico",
+              "demux_periph_ico",
+              "periph_ico",
+              "l1_ico",
+              "l1",
+              "dma",
+              "cluster_ctrl",
+              "event_unit",
+              "timer",
+              "icache_ctrl",
+              "pe0",
+              "pe1",
+              "pe2",
+              "pe3",
+              "pe4",
+              "pe5",
+              "pe6",
+              "pe7"
+            ],
+            "vp_bindings": [
+              [
+                "self->input",
+                "cluster_ico->input"
+              ],
+              [
+                "cluster_ico->soc",
+                "self->soc"
+              ],
+              [
+                "cluster_ico->l1",
+                "l1_ico->ext2loc_itf"
+              ],
+              [
+                "cluster_ico->periph_ico",
+                "periph_ico->input"
+              ],
+              [
+                "cluster_ico->periph_ico_alias",
+                "periph_ico->input"
+              ],
+              [
+                "periph_ico->icache_ctrl",
+                "icache_ctrl->input"
+              ],
+              [
+                "periph_ico->event_unit",
+                "event_unit->input"
+              ],
+              [
+                "periph_ico->cluster_ctrl",
+                "cluster_ctrl->input"
+              ],
+              [
+                "periph_ico->timer",
+                "timer->input"
+              ],
+              [
+                "periph_ico->dma",
+                "dma->in_8"
+              ],
+              [
+                "periph_ico->dbg_unit_0",
+                "pe0->dbg_unit"
+              ],
+              [
+                "periph_ico->dbg_unit_1",
+                "pe1->dbg_unit"
+              ],
+              [
+                "periph_ico->dbg_unit_2",
+                "pe2->dbg_unit"
+              ],
+              [
+                "periph_ico->dbg_unit_3",
+                "pe3->dbg_unit"
+              ],
+              [
+                "periph_ico->dbg_unit_4",
+                "pe4->dbg_unit"
+              ],
+              [
+                "periph_ico->dbg_unit_5",
+                "pe5->dbg_unit"
+              ],
+              [
+                "periph_ico->dbg_unit_6",
+                "pe6->dbg_unit"
+              ],
+              [
+                "periph_ico->dbg_unit_7",
+                "pe7->dbg_unit"
+              ],
+              [
+                "periph_ico->cluster_ico",
+                "cluster_ico->input"
+              ],
+              [
+                "l1_ico->event_unit_0",
+                "event_unit->demux_in_0"
+              ],
+              [
+                "l1_ico->event_unit_1",
+                "event_unit->demux_in_1"
+              ],
+              [
+                "l1_ico->event_unit_2",
+                "event_unit->demux_in_2"
+              ],
+              [
+                "l1_ico->event_unit_3",
+                "event_unit->demux_in_3"
+              ],
+              [
+                "l1_ico->event_unit_4",
+                "event_unit->demux_in_4"
+              ],
+              [
+                "l1_ico->event_unit_5",
+                "event_unit->demux_in_5"
+              ],
+              [
+                "l1_ico->event_unit_6",
+                "event_unit->demux_in_6"
+              ],
+              [
+                "l1_ico->event_unit_7",
+                "event_unit->demux_in_7"
+              ],
+              [
+                "l1_ico->event_unit_alias_0",
+                "event_unit->demux_in_0"
+              ],
+              [
+                "l1_ico->event_unit_alias_1",
+                "event_unit->demux_in_1"
+              ],
+              [
+                "l1_ico->event_unit_alias_2",
+                "event_unit->demux_in_2"
+              ],
+              [
+                "l1_ico->event_unit_alias_3",
+                "event_unit->demux_in_3"
+              ],
+              [
+                "l1_ico->event_unit_alias_4",
+                "event_unit->demux_in_4"
+              ],
+              [
+                "l1_ico->event_unit_alias_5",
+                "event_unit->demux_in_5"
+              ],
+              [
+                "l1_ico->event_unit_alias_6",
+                "event_unit->demux_in_6"
+              ],
+              [
+                "l1_ico->event_unit_alias_7",
+                "event_unit->demux_in_7"
+              ],
+              [
+                "l1_ico->dma_0",
+                "dma->in_0"
+              ],
+              [
+                "l1_ico->dma_1",
+                "dma->in_1"
+              ],
+              [
+                "l1_ico->dma_2",
+                "dma->in_2"
+              ],
+              [
+                "l1_ico->dma_3",
+                "dma->in_3"
+              ],
+              [
+                "l1_ico->dma_4",
+                "dma->in_4"
+              ],
+              [
+                "l1_ico->dma_5",
+                "dma->in_5"
+              ],
+              [
+                "l1_ico->dma_6",
+                "dma->in_6"
+              ],
+              [
+                "l1_ico->dma_7",
+                "dma->in_7"
+              ],
+              [
+                "l1_ico->dma_alias_0",
+                "dma->in_0"
+              ],
+              [
+                "l1_ico->dma_alias_1",
+                "dma->in_1"
+              ],
+              [
+                "l1_ico->dma_alias_2",
+                "dma->in_2"
+              ],
+              [
+                "l1_ico->dma_alias_3",
+                "dma->in_3"
+              ],
+              [
+                "l1_ico->dma_alias_4",
+                "dma->in_4"
+              ],
+              [
+                "l1_ico->dma_alias_5",
+                "dma->in_5"
+              ],
+              [
+                "l1_ico->dma_alias_6",
+                "dma->in_6"
+              ],
+              [
+                "l1_ico->dma_alias_7",
+                "dma->in_7"
+              ],
+              [
+                "l1_ico->out_0",
+                "l1->in_0"
+              ],
+              [
+                "l1_ico->out_1",
+                "l1->in_1"
+              ],
+              [
+                "l1_ico->out_2",
+                "l1->in_2"
+              ],
+              [
+                "l1_ico->out_3",
+                "l1->in_3"
+              ],
+              [
+                "l1_ico->out_4",
+                "l1->in_4"
+              ],
+              [
+                "l1_ico->out_5",
+                "l1->in_5"
+              ],
+              [
+                "l1_ico->out_6",
+                "l1->in_6"
+              ],
+              [
+                "l1_ico->out_7",
+                "l1->in_7"
+              ],
+              [
+                "l1_ico->out_8",
+                "l1->in_8"
+              ],
+              [
+                "l1_ico->out_9",
+                "l1->in_9"
+              ],
+              [
+                "l1_ico->out_10",
+                "l1->in_10"
+              ],
+              [
+                "l1_ico->out_11",
+                "l1->in_11"
+              ],
+              [
+                "l1_ico->out_12",
+                "l1->in_12"
+              ],
+              [
+                "l1_ico->out_13",
+                "l1->in_13"
+              ],
+              [
+                "l1_ico->out_14",
+                "l1->in_14"
+              ],
+              [
+                "l1_ico->out_15",
+                "l1->in_15"
+              ],
+              [
+                "l1_ico->cluster_ico",
+                "cluster_ico->input"
+              ],
+              [
+                "dma->ext_irq_itf",
+                "self->dma_irq"
+              ],
+              [
+                "dma->ext_irq_itf",
+                "event_unit->in_event_22_pe_0"
+              ],
+              [
+                "dma->ext_irq_itf",
+                "event_unit->in_event_22_pe_1"
+              ],
+              [
+                "dma->ext_irq_itf",
+                "event_unit->in_event_22_pe_2"
+              ],
+              [
+                "dma->ext_irq_itf",
+                "event_unit->in_event_22_pe_3"
+              ],
+              [
+                "dma->ext_irq_itf",
+                "event_unit->in_event_22_pe_4"
+              ],
+              [
+                "dma->ext_irq_itf",
+                "event_unit->in_event_22_pe_5"
+              ],
+              [
+                "dma->ext_irq_itf",
+                "event_unit->in_event_22_pe_6"
+              ],
+              [
+                "dma->ext_irq_itf",
+                "event_unit->in_event_22_pe_7"
+              ],
+              [
+                "dma->event_itf_0",
+                "event_unit->in_event_8_pe_0"
+              ],
+              [
+                "dma->event_itf_1",
+                "event_unit->in_event_8_pe_1"
+              ],
+              [
+                "dma->event_itf_2",
+                "event_unit->in_event_8_pe_2"
+              ],
+              [
+                "dma->event_itf_3",
+                "event_unit->in_event_8_pe_3"
+              ],
+              [
+                "dma->event_itf_4",
+                "event_unit->in_event_8_pe_4"
+              ],
+              [
+                "dma->event_itf_5",
+                "event_unit->in_event_8_pe_5"
+              ],
+              [
+                "dma->event_itf_6",
+                "event_unit->in_event_8_pe_6"
+              ],
+              [
+                "dma->event_itf_7",
+                "event_unit->in_event_8_pe_7"
+              ],
+              [
+                "dma->irq_itf_0",
+                "event_unit->in_event_9_pe_0"
+              ],
+              [
+                "dma->irq_itf_1",
+                "event_unit->in_event_9_pe_1"
+              ],
+              [
+                "dma->irq_itf_2",
+                "event_unit->in_event_9_pe_2"
+              ],
+              [
+                "dma->irq_itf_3",
+                "event_unit->in_event_9_pe_3"
+              ],
+              [
+                "dma->irq_itf_4",
+                "event_unit->in_event_9_pe_4"
+              ],
+              [
+                "dma->irq_itf_5",
+                "event_unit->in_event_9_pe_5"
+              ],
+              [
+                "dma->irq_itf_6",
+                "event_unit->in_event_9_pe_6"
+              ],
+              [
+                "dma->irq_itf_7",
+                "event_unit->in_event_9_pe_7"
+              ],
+              [
+                "dma->ext_itf",
+                "cluster_ico->input"
+              ],
+              [
+                "dma->loc_itf_0",
+                "l1_ico->dma_in_0"
+              ],
+              [
+                "dma->loc_itf_1",
+                "l1_ico->dma_in_1"
+              ],
+              [
+                "dma->loc_itf_2",
+                "l1_ico->dma_in_2"
+              ],
+              [
+                "dma->loc_itf_3",
+                "l1_ico->dma_in_3"
+              ],
+              [
+                "cluster_ctrl->bootaddr_0",
+                "pe0->bootaddr"
+              ],
+              [
+                "cluster_ctrl->bootaddr_1",
+                "pe1->bootaddr"
+              ],
+              [
+                "cluster_ctrl->bootaddr_2",
+                "pe2->bootaddr"
+              ],
+              [
+                "cluster_ctrl->bootaddr_3",
+                "pe3->bootaddr"
+              ],
+              [
+                "cluster_ctrl->bootaddr_4",
+                "pe4->bootaddr"
+              ],
+              [
+                "cluster_ctrl->bootaddr_5",
+                "pe5->bootaddr"
+              ],
+              [
+                "cluster_ctrl->bootaddr_6",
+                "pe6->bootaddr"
+              ],
+              [
+                "cluster_ctrl->bootaddr_7",
+                "pe7->bootaddr"
+              ],
+              [
+                "cluster_ctrl->fetchen_0",
+                "pe0->fetchen"
+              ],
+              [
+                "cluster_ctrl->fetchen_1",
+                "pe1->fetchen"
+              ],
+              [
+                "cluster_ctrl->fetchen_2",
+                "pe2->fetchen"
+              ],
+              [
+                "cluster_ctrl->fetchen_3",
+                "pe3->fetchen"
+              ],
+              [
+                "cluster_ctrl->fetchen_4",
+                "pe4->fetchen"
+              ],
+              [
+                "cluster_ctrl->fetchen_5",
+                "pe5->fetchen"
+              ],
+              [
+                "cluster_ctrl->fetchen_6",
+                "pe6->fetchen"
+              ],
+              [
+                "cluster_ctrl->fetchen_7",
+                "pe7->fetchen"
+              ],
+              [
+                "cluster_ctrl->halt_0",
+                "pe0->halt"
+              ],
+              [
+                "cluster_ctrl->halt_1",
+                "pe1->halt"
+              ],
+              [
+                "cluster_ctrl->halt_2",
+                "pe2->halt"
+              ],
+              [
+                "cluster_ctrl->halt_3",
+                "pe3->halt"
+              ],
+              [
+                "cluster_ctrl->halt_4",
+                "pe4->halt"
+              ],
+              [
+                "cluster_ctrl->halt_5",
+                "pe5->halt"
+              ],
+              [
+                "cluster_ctrl->halt_6",
+                "pe6->halt"
+              ],
+              [
+                "cluster_ctrl->halt_7",
+                "pe7->halt"
+              ],
+              [
+                "event_unit->irq_req_0",
+                "pe0->irq_req"
+              ],
+              [
+                "event_unit->irq_req_1",
+                "pe1->irq_req"
+              ],
+              [
+                "event_unit->irq_req_2",
+                "pe2->irq_req"
+              ],
+              [
+                "event_unit->irq_req_3",
+                "pe3->irq_req"
+              ],
+              [
+                "event_unit->irq_req_4",
+                "pe4->irq_req"
+              ],
+              [
+                "event_unit->irq_req_5",
+                "pe5->irq_req"
+              ],
+              [
+                "event_unit->irq_req_6",
+                "pe6->irq_req"
+              ],
+              [
+                "event_unit->irq_req_7",
+                "pe7->irq_req"
+              ],
+              [
+                "timer->irq_itf_0",
+                "event_unit->in_event_10_pe_0"
+              ],
+              [
+                "timer->irq_itf_0",
+                "event_unit->in_event_10_pe_1"
+              ],
+              [
+                "timer->irq_itf_0",
+                "event_unit->in_event_10_pe_2"
+              ],
+              [
+                "timer->irq_itf_0",
+                "event_unit->in_event_10_pe_3"
+              ],
+              [
+                "timer->irq_itf_0",
+                "event_unit->in_event_10_pe_4"
+              ],
+              [
+                "timer->irq_itf_0",
+                "event_unit->in_event_10_pe_5"
+              ],
+              [
+                "timer->irq_itf_0",
+                "event_unit->in_event_10_pe_6"
+              ],
+              [
+                "timer->irq_itf_0",
+                "event_unit->in_event_10_pe_7"
+              ],
+              [
+                "timer->irq_itf_1",
+                "event_unit->in_event_11_pe_0"
+              ],
+              [
+                "timer->irq_itf_1",
+                "event_unit->in_event_11_pe_1"
+              ],
+              [
+                "timer->irq_itf_1",
+                "event_unit->in_event_11_pe_2"
+              ],
+              [
+                "timer->irq_itf_1",
+                "event_unit->in_event_11_pe_3"
+              ],
+              [
+                "timer->irq_itf_1",
+                "event_unit->in_event_11_pe_4"
+              ],
+              [
+                "timer->irq_itf_1",
+                "event_unit->in_event_11_pe_5"
+              ],
+              [
+                "timer->irq_itf_1",
+                "event_unit->in_event_11_pe_6"
+              ],
+              [
+                "timer->irq_itf_1",
+                "event_unit->in_event_11_pe_7"
+              ],
+              [
+                "pe0->halt_status",
+                "cluster_ctrl->core_halt_0"
+              ],
+              [
+                "pe0->data",
+                "l1_ico->data_pe_0"
+              ],
+              [
+                "pe0->fetch",
+                "cluster_ico->input"
+              ],
+              [
+                "pe0->irq_ack",
+                "event_unit->irq_ack_0"
+              ],
+              [
+                "pe0->ext_counter[11]",
+                "l1_ico->ext_counter_0[11]"
+              ],
+              [
+                "pe0->ext_counter[12]",
+                "l1_ico->ext_counter_0[12]"
+              ],
+              [
+                "pe0->ext_counter[13]",
+                "l1_ico->ext_counter_0[13]"
+              ],
+              [
+                "pe0->ext_counter[14]",
+                "l1_ico->ext_counter_0[14]"
+              ],
+              [
+                "pe0->ext_counter[15]",
+                "l1_ico->ext_counter_0[15]"
+              ],
+              [
+                "pe1->halt_status",
+                "cluster_ctrl->core_halt_1"
+              ],
+              [
+                "pe1->data",
+                "l1_ico->data_pe_1"
+              ],
+              [
+                "pe1->fetch",
+                "cluster_ico->input"
+              ],
+              [
+                "pe1->irq_ack",
+                "event_unit->irq_ack_1"
+              ],
+              [
+                "pe1->ext_counter[11]",
+                "l1_ico->ext_counter_1[11]"
+              ],
+              [
+                "pe1->ext_counter[12]",
+                "l1_ico->ext_counter_1[12]"
+              ],
+              [
+                "pe1->ext_counter[13]",
+                "l1_ico->ext_counter_1[13]"
+              ],
+              [
+                "pe1->ext_counter[14]",
+                "l1_ico->ext_counter_1[14]"
+              ],
+              [
+                "pe1->ext_counter[15]",
+                "l1_ico->ext_counter_1[15]"
+              ],
+              [
+                "pe2->halt_status",
+                "cluster_ctrl->core_halt_2"
+              ],
+              [
+                "pe2->data",
+                "l1_ico->data_pe_2"
+              ],
+              [
+                "pe2->fetch",
+                "cluster_ico->input"
+              ],
+              [
+                "pe2->irq_ack",
+                "event_unit->irq_ack_2"
+              ],
+              [
+                "pe2->ext_counter[11]",
+                "l1_ico->ext_counter_2[11]"
+              ],
+              [
+                "pe2->ext_counter[12]",
+                "l1_ico->ext_counter_2[12]"
+              ],
+              [
+                "pe2->ext_counter[13]",
+                "l1_ico->ext_counter_2[13]"
+              ],
+              [
+                "pe2->ext_counter[14]",
+                "l1_ico->ext_counter_2[14]"
+              ],
+              [
+                "pe2->ext_counter[15]",
+                "l1_ico->ext_counter_2[15]"
+              ],
+              [
+                "pe3->halt_status",
+                "cluster_ctrl->core_halt_3"
+              ],
+              [
+                "pe3->data",
+                "l1_ico->data_pe_3"
+              ],
+              [
+                "pe3->fetch",
+                "cluster_ico->input"
+              ],
+              [
+                "pe3->irq_ack",
+                "event_unit->irq_ack_3"
+              ],
+              [
+                "pe3->ext_counter[11]",
+                "l1_ico->ext_counter_3[11]"
+              ],
+              [
+                "pe3->ext_counter[12]",
+                "l1_ico->ext_counter_3[12]"
+              ],
+              [
+                "pe3->ext_counter[13]",
+                "l1_ico->ext_counter_3[13]"
+              ],
+              [
+                "pe3->ext_counter[14]",
+                "l1_ico->ext_counter_3[14]"
+              ],
+              [
+                "pe3->ext_counter[15]",
+                "l1_ico->ext_counter_3[15]"
+              ],
+              [
+                "pe4->halt_status",
+                "cluster_ctrl->core_halt_4"
+              ],
+              [
+                "pe4->data",
+                "l1_ico->data_pe_4"
+              ],
+              [
+                "pe4->fetch",
+                "cluster_ico->input"
+              ],
+              [
+                "pe4->irq_ack",
+                "event_unit->irq_ack_4"
+              ],
+              [
+                "pe4->ext_counter[11]",
+                "l1_ico->ext_counter_4[11]"
+              ],
+              [
+                "pe4->ext_counter[12]",
+                "l1_ico->ext_counter_4[12]"
+              ],
+              [
+                "pe4->ext_counter[13]",
+                "l1_ico->ext_counter_4[13]"
+              ],
+              [
+                "pe4->ext_counter[14]",
+                "l1_ico->ext_counter_4[14]"
+              ],
+              [
+                "pe4->ext_counter[15]",
+                "l1_ico->ext_counter_4[15]"
+              ],
+              [
+                "pe5->halt_status",
+                "cluster_ctrl->core_halt_5"
+              ],
+              [
+                "pe5->data",
+                "l1_ico->data_pe_5"
+              ],
+              [
+                "pe5->fetch",
+                "cluster_ico->input"
+              ],
+              [
+                "pe5->irq_ack",
+                "event_unit->irq_ack_5"
+              ],
+              [
+                "pe5->ext_counter[11]",
+                "l1_ico->ext_counter_5[11]"
+              ],
+              [
+                "pe5->ext_counter[12]",
+                "l1_ico->ext_counter_5[12]"
+              ],
+              [
+                "pe5->ext_counter[13]",
+                "l1_ico->ext_counter_5[13]"
+              ],
+              [
+                "pe5->ext_counter[14]",
+                "l1_ico->ext_counter_5[14]"
+              ],
+              [
+                "pe5->ext_counter[15]",
+                "l1_ico->ext_counter_5[15]"
+              ],
+              [
+                "pe6->halt_status",
+                "cluster_ctrl->core_halt_6"
+              ],
+              [
+                "pe6->data",
+                "l1_ico->data_pe_6"
+              ],
+              [
+                "pe6->fetch",
+                "cluster_ico->input"
+              ],
+              [
+                "pe6->irq_ack",
+                "event_unit->irq_ack_6"
+              ],
+              [
+                "pe6->ext_counter[11]",
+                "l1_ico->ext_counter_6[11]"
+              ],
+              [
+                "pe6->ext_counter[12]",
+                "l1_ico->ext_counter_6[12]"
+              ],
+              [
+                "pe6->ext_counter[13]",
+                "l1_ico->ext_counter_6[13]"
+              ],
+              [
+                "pe6->ext_counter[14]",
+                "l1_ico->ext_counter_6[14]"
+              ],
+              [
+                "pe6->ext_counter[15]",
+                "l1_ico->ext_counter_6[15]"
+              ],
+              [
+                "pe7->halt_status",
+                "cluster_ctrl->core_halt_7"
+              ],
+              [
+                "pe7->data",
+                "l1_ico->data_pe_7"
+              ],
+              [
+                "pe7->fetch",
+                "cluster_ico->input"
+              ],
+              [
+                "pe7->irq_ack",
+                "event_unit->irq_ack_7"
+              ],
+              [
+                "pe7->ext_counter[11]",
+                "l1_ico->ext_counter_7[11]"
+              ],
+              [
+                "pe7->ext_counter[12]",
+                "l1_ico->ext_counter_7[12]"
+              ],
+              [
+                "pe7->ext_counter[13]",
+                "l1_ico->ext_counter_7[13]"
+              ],
+              [
+                "pe7->ext_counter[14]",
+                "l1_ico->ext_counter_7[14]"
+              ],
+              [
+                "pe7->ext_counter[15]",
+                "l1_ico->ext_counter_7[15]"
+              ]
+            ]
+          },
+          "fc_events": {
+            "evt_sw_event3": 3,
+            "evt_picl_ok": 24,
+            "evt_sw_event1": 1,
+            "evt_sw_event0": 0,
+            "evt_timer1": 11,
+            "evt_clkref": 14,
+            "evt_cluster_not_busy": 21,
+            "evt_sw_event7": 7,
+            "evt_sw_event5": 5,
+            "evt_adv_timer3": 20,
+            "evt_cluster_cg_ok": 23,
+            "evt_scu_ok": 25,
+            "evt_queue_error": 29,
+            "evt_rtc": 16,
+            "evt_timer0": 10,
+            "evt_sw_event2": 2,
+            "evt_cluster_pok": 22,
+            "evt_sw_event6": 6,
+            "evt_gpio": 15,
+            "evt_adv_timer1": 18,
+            "evt_adv_timer2": 19,
+            "evt_soc_evt": 26,
+            "evt_sw_event4": 4,
+            "evt_adv_timer0": 17
+          },
+          "plt_loader": {
+            "vp_ports": [
+              "out"
+            ],
+            "binaries": [
+              "/scratch/sem17f11/xnornet_gap8/gap8/build/wolfe/api/api"
+            ],
+            "vp_class": "utils/loader"
+          },
+          "timer": {
+            "vp_ports": [
+              "irq_itf_0",
+              "irq_itf_1",
+              "input"
+            ],
+            "archi_files": [
+              "archi/timer/timer_v2.h"
+            ],
+            "version": 2,
+            "vp_class": "pulp/timer/timer_v2",
+            "hal_files": [
+              "hal/timer/timer_v2.h"
+            ]
+          },
+          "l2_shared_3": {
+            "vp_ports": [
+              "input"
+            ],
+            "size": 114688,
+            "vp_class": "memory/memory"
+          },
+          "uart": {
+            "version": 1
+          },
+          "udma": {
+            "interfaces": [
+              "spim",
+              "hyper",
+              "i2c",
+              "i2s",
+              "uart",
+              "cpi"
+            ],
+            "i2c": {
+              "ids": [
+                4,
+                5
+              ],
+              "nb_channels": 2,
+              "version": 2,
+              "offsets": [
+                "0x200",
+                "0x280"
+              ]
+            },
+            "vp_class": "pulp/udma/udma_v2",
+            "spim": {
+              "is_master": true,
+              "ids": [
+                0,
+                1
+              ],
+              "nb_channels": 2,
+              "version": 2,
+              "offsets": [
+                "0x000",
+                "0x080"
+              ]
+            },
+            "properties": {
+              "l2_read_fifo_size": 8
+            },
+            "version": 2,
+            "nb_periphs": 7,
+            "hal_files": [
+              "hal/udma/udma_v2.h",
+              "hal/udma/udma_periph_v2.h",
+              "hal/udma/udma_periph_hyper_v1.h",
+              "hal/udma/udma_periph_i2s_v1.h"
+            ],
+            "vp_ports": [
+              "l2_itf",
+              "event_itf",
+              "spim0",
+              "spim1",
+              "hyper0",
+              "uart0",
+              "input",
+              "cpi0"
+            ],
+            "commands": {
+              "SPI_CMD_TX_DATA": {
+                "content": {
+                  "SPI_CMD": {
+                    "desc": "Select the SPIM command to be processed. Here TX_DATA",
+                    "width": 4,
+                    "bit": 28
+                  },
+                  "BYTE_ALIGN": {
+                    "desc": "Disable byte alignment\n  - 1'b0: enable byte alignment\n  - 1'b1: disable byte alignment",
+                    "width": 1,
+                    "bit": 26
+                  },
+                  "QPI": {
+                    "desc": "Sends the command using QuadSPI",
+                    "width": 1,
+                    "bit": 27
+                  },
+                  "DATA_SIZE": {
+                    "desc": "Number of bits to send (Max 64Kbits). The value written here is num bits \u2013 1.",
+                    "width": 16,
+                    "bit": 0
+                  }
+                },
+                "desc": "Sends data (max 64Kbits)"
+              },
+              "SPI_CMD_RX_CHECK": {
+                "content": {
+                  "SPI_CMD": {
+                    "desc": "Select the SPIM command to be processed. Here RX_CHECK",
+                    "width": 4,
+                    "bit": 28
+                  },
+                  "BYTE_ALIGN": {
+                    "desc": "Disable byte alignment\n  - 1'b0: enable byte alignment\n  - 1'b1: disable byte alignment",
+                    "width": 1,
+                    "bit": 26
+                  },
+                  "COMP_DATA": {
+                    "desc": "Data to compare. Max 16bits",
+                    "width": 16,
+                    "bit": 0
+                  },
+                  "STATUS_SIZE": {
+                    "desc": "Size in bits of the word to read. The value written here is num bits \u2013 1.",
+                    "width": 4,
+                    "bit": 16
+                  },
+                  "QPI": {
+                    "desc": "Sends the command using QuadSPI",
+                    "width": 1,
+                    "bit": 27
+                  },
+                  "CHECK_TYPE": {
+                    "desc": "Select check to process:\n  - 2'b00: compare bit a bit\n  - 2'b01: compare only ones\n  - 2'b10: compare ony zeros",
+                    "width": 2,
+                    "bit": 24
+                  }
+                },
+                "desc": "Check up ot 16 bits of data against an expected value"
+              },
+              "SPI_CMD_WAIT": {
+                "content": {
+                  "SPI_CMD": {
+                    "desc": "Select the SPIM command to be processed. Here WAIT",
+                    "width": 4,
+                    "bit": 28
+                  },
+                  "EVENT_ID": {
+                    "desc": "External event id",
+                    "width": 2,
+                    "bit": 0
+                  }
+                },
+                "desc": "Waits an external event to move to the next instruction"
+              },
+              "SPI_CMD_DUMMY": {
+                "content": {
+                  "SPI_CMD": {
+                    "desc": "Select the SPIM command to be processed. Here DUMMY",
+                    "width": 4,
+                    "bit": 28
+                  },
+                  "DUMMY_CYCLE": {
+                    "desc": "Number of dummy cycles to perform",
+                    "width": 5,
+                    "bit": 16
+                  }
+                },
+                "desc": "Transmits a configurable size address"
+              },
+              "SPI_CMD_SEND_CMD": {
+                "content": {
+                  "CMD_VALUE": {
+                    "desc": "Sets the command to send. MSB must always be at bit15 also if cmd size is lower than 16",
+                    "width": 16,
+                    "bit": 0
+                  },
+                  "SPI_CMD": {
+                    "desc": "Select the SPIM command to be processed. Here SEND_CMD",
+                    "width": 4,
+                    "bit": 28
+                  },
+                  "QPI": {
+                    "desc": "Sends the command using QuadSPI",
+                    "width": 1,
+                    "bit": 27
+                  },
+                  "CMD_SIZE": {
+                    "desc": "Size in bits of the command to send. The value written here is num bits \u2013 1.",
+                    "width": 5,
+                    "bit": 16
+                  }
+                },
+                "desc": "Transmits a configurable size command"
+              },
+              "SPI_CMD_RPT_END": {
+                "content": {
+                  "SPI_CMD": {
+                    "desc": "Select the SPIM command to be processed. Here RPT_END",
+                    "width": 4,
+                    "bit": 28
+                  }
+                },
+                "desc": "End of the repeat loop command"
+              },
+              "SPI_CMD_RX_DATA": {
+                "content": {
+                  "SPI_CMD": {
+                    "desc": "Select the SPIM command to be processed. Here RX_DATA",
+                    "width": 4,
+                    "bit": 28
+                  },
+                  "BYTE_ALIGN": {
+                    "desc": "Disable byte alignment\n  - 1'b0: enable byte alignment\n  - 1'b1: disable byte alignment",
+                    "width": 1,
+                    "bit": 26
+                  },
+                  "QPI": {
+                    "desc": "Sends the command using QuadSPI",
+                    "width": 1,
+                    "bit": 27
+                  },
+                  "DATA_SIZE": {
+                    "desc": "Number of bits to receive (Max 64Kbits). The value written here is num bits \u2013 1.",
+                    "width": 16,
+                    "bit": 0
+                  }
+                },
+                "desc": "Receives data (max 64Kbits)"
+              },
+              "SPI_CMD_SEND_ADDR": {
+                "content": {
+                  "SPI_CMD": {
+                    "desc": "Select the SPIM command to be processed. Here SEND_ADDR",
+                    "width": 4,
+                    "bit": 28
+                  },
+                  "QPI": {
+                    "desc": "Sends the command using QuadSPI",
+                    "width": 1,
+                    "bit": 27
+                  },
+                  "CMD_SIZE": {
+                    "desc": "Size in bits of the address to send. The value written here is num bits \u2013 1.",
+                    "width": 5,
+                    "bit": 16
+                  }
+                },
+                "desc": "Transmits a configurable size address"
+              },
+              "SPI_CMD_RPT": {
+                "content": {
+                  "SPI_CMD": {
+                    "desc": "Select the SPIM command to be processed. Here RPT",
+                    "width": 4,
+                    "bit": 28
+                  },
+                  "RPT_CNT": {
+                    "desc": "Number of transfers to repeat (Max 64K)",
+                    "width": 16,
+                    "bit": 0
+                  }
+                },
+                "desc": "Repeat the next transfer N times"
+              },
+              "SPI_CMD_SOT": {
+                "content": {
+                  "SPI_CMD": {
+                    "desc": "Select the SPIM command to be processed. Here SOT",
+                    "width": 4,
+                    "bit": 28
+                  },
+                  "CS": {
+                    "desc": "Sets the Chip Select (CS):\n  - 2'b00: select csn0\n  - 2'b01: select csn1\n  - 2'b10: select csn2\n  - 2'b11: select csn3",
+                    "width": 2,
+                    "bit": 0
+                  }
+                },
+                "desc": "Start of stream"
+              },
+              "SPI_CMD_CFG": {
+                "content": {
+                  "SPI_CMD": {
+                    "desc": "Select the SPIM command to be processed. Here CFG",
+                    "width": 4,
+                    "bit": 28
+                  },
+                  "CLKDIV": {
+                    "desc": "Sets the clock divider value",
+                    "width": 8,
+                    "bit": 0
+                  },
+                  "CPOL": {
+                    "desc": "Sets the clock polarity:\n  - 1'b0:\n  - 1'b1:",
+                    "width": 1,
+                    "bit": 9
+                  },
+                  "CPHA": {
+                    "desc": "Sets the clock phase:\n  - 1'b0: \n  - 1'b1:",
+                    "width": 1,
+                    "bit": 8
+                  }
+                },
+                "desc": "Sets the configuration for the SPI Master IP"
+              },
+              "SPI_CMD_FULL_DUPL": {
+                "content": {
+                  "SPI_CMD": {
+                    "desc": "Select the SPIM command to be processed. Here FULL_DUPLEX",
+                    "width": 4,
+                    "bit": 28
+                  },
+                  "BYTE_ALIGN": {
+                    "desc": "Disable byte alignment\n  - 1'b0: enable byte alignment\n  - 1'b1: disable byte alignment",
+                    "width": 1,
+                    "bit": 26
+                  },
+                  "DATA_SIZE": {
+                    "desc": "Number of bits to send (Max 64Kbits). The value written here is num bits \u2013 1.",
+                    "width": 16,
+                    "bit": 0
+                  }
+                },
+                "desc": "Activate full duplex mode"
+              },
+              "SPI_CMD_EOT": {
+                "content": {
+                  "SPI_CMD": {
+                    "desc": "Select the SPIM command to be processed. Here EOT",
+                    "width": 4,
+                    "bit": 28
+                  },
+                  "EVENT_GEN": {
+                    "desc": "Enable EOT event:\n  - 1'b0: disable\n  - 1'b1: enable",
+                    "width": 1,
+                    "bit": 0
+                  }
+                },
+                "desc": "End of stream"
+              }
+            },
+            "uart": {
+              "is_master": true,
+              "ids": [
+                3
+              ],
+              "nb_channels": 1,
+              "version": 1,
+              "offsets": [
+                "0x180"
+              ]
+            },
+            "hyper": {
+              "is_master": true,
+              "ids": [
+                2
+              ],
+              "nb_channels": 1,
+              "version": 1,
+              "offsets": [
+                "0x100"
+              ]
+            },
+            "regmap": {
+              "channel": {
+                "type": "template",
+                "cfg": {
+                  "content": {
+                    "en": {
+                      "reset": "0x0",
+                      "desc": "Channel enable and start transfer:\n  -1'b0: disable\n  -1'b1: enable\nThis signal is used also to queue a transfer if one is already ongoing.",
+                      "width": 1,
+                      "bit": 4,
+                      "access": "R/W"
+                    },
+                    "continuous": {
+                      "reset": "0x0",
+                      "desc": "Channel continuous mode:\n  -1'b0: disable\n  -1'b1: enable\nAt the end of the buffer the uDMA reloads the address and size and starts a new transfer.",
+                      "width": 1,
+                      "bit": 0,
+                      "access": "R/W"
+                    },
+                    "pending": {
+                      "reset": "0x0",
+                      "desc": "Transfer pending in queue status flag:\n  -1'b0: free\n  -1'b1: pending",
+                      "width": 1,
+                      "bit": 6,
+                      "access": "R"
+                    },
+                    "datasize": {
+                      "reset": "0x0",
+                      "desc": "Channel transfer size used to increment uDMA buffer address pointer:\n  - 2'b00: +1 (8 bits)\n  - 2'b01: +2 (16 bits)\n  - 2'b10: +4 (32 bits)\n  - 2'b11: +0",
+                      "width": 2,
+                      "bit": 1,
+                      "access": "R/W"
+                    },
+                    "clr": {
+                      "reset": "0x0",
+                      "desc": "Channel clear and stop transfer:\n  -1'b0: disable\n  -1'b1: enable",
+                      "width": 1,
+                      "bit": 5,
+                      "access": "W"
+                    }
+                  },
+                  "type": "register",
+                  "desc": "uDMA config reg",
+                  "width": 32,
+                  "offset": "0x08"
+                },
+                "saddr": {
+                  "content": {
+                    "saddr": {
+                      "reset": "0x0",
+                      "desc": "Configure pointer to memory buffer:\n  - Read: value of the pointer until transfer is over. Else returns 0\n  - Write: set Address Pointer to memory buffer start address",
+                      "width": 16,
+                      "bit": 0,
+                      "access": "R/W"
+                    }
+                  },
+                  "type": "register",
+                  "desc": "uDMA start reg",
+                  "width": 32,
+                  "offset": "0x00"
+                },
+                "size": {
+                  "content": {
+                    "size": {
+                      "reset": "0x0",
+                      "desc": "Buffer size in DATASIZE. (128kBytes maximum)\n  - Read: buffer size left\n  - Write: set buffer size",
+                      "width": 16,
+                      "bit": 0,
+                      "access": "R/W"
+                    }
+                  },
+                  "type": "register",
+                  "desc": "uDMA size reg",
+                  "width": 32,
+                  "offset": "0x04"
+                }
+              },
+              "SPIM0": {
+                "template": "SPIM",
+                "type": "group",
+                "offset": "0x100"
+              },
+              "SPIM": {
+                "TX": {
+                  "template": "channel",
+                  "type": "group",
+                  "offset": "0x10"
+                },
+                "type": "template",
+                "RX": {
+                  "template": "channel",
+                  "cfg": {
+                    "content": {
+                      "datasize": {
+                        "access": "R",
+                        "reset": "0x2"
+                      }
+                    }
+                  },
+                  "type": "group",
+                  "offset": "0x00"
+                }
+              }
+            },
+            "archi_files": [
+              "archi/udma/udma_v2.h",
+              "archi/udma/udma_periph_v2.h",
+              "archi/udma/hyper.h"
+            ],
+            "i2s": {
+              "ids": [
+                6
+              ],
+              "nb_channels": 1,
+              "version": 1,
+              "offsets": [
+                "0x300"
+              ]
+            },
+            "archi": 2,
+            "cpi": {
+              "is_slave": true,
+              "ids": [
+                7
+              ],
+              "nb_channels": 1,
+              "version": 1,
+              "offsets": [
+                "0x380"
+              ]
+            }
+          },
+          "soc_events_ids": {
+            "soc_evt_spim1_tx": 3,
+            "soc_evt_i2s_ch1": 13,
+            "soc_evt_picl_ok": 36,
+            "soc_evt_uart0_rx": 6,
+            "soc_evt_hyper0_tx": 5,
+            "soc_evt_i2c0_extra": 26,
+            "soc_evt_gpio": 42,
+            "soc_evt_sw_first": 48,
+            "soc_evt_pmu0": 31,
+            "soc_evt_i2c1_tx": 11,
+            "soc_evt_rtc": 44,
+            "soc_evt_spim1_rx": 2,
+            "soc_evt_i2c0_rx": 8,
+            "soc_evt_cluster_cg_ok": 35,
+            "soc_evt_scu_ok": 37,
+            "soc_evt_spim0_eot": 22,
+            "soc_evt_rtc_apb": 43,
+            "soc_evt_cluster_pok": 31,
+            "soc_evt_l2l2_eot": 23,
+            "soc_evt_i2c0_tx": 9,
+            "soc_evt_adv_timer1": 39,
+            "soc_evt_i2s_extra": 28,
+            "soc_evt_i2c1_extra": 27,
+            "soc_evt_i2s_ch0": 12,
+            "soc_evt_uart_eot": 25,
+            "soc_evt_adv_timer2": 40,
+            "soc_evt_sw_nb": 8,
+            "soc_evt_spim0_rx": 0,
+            "soc_evt_cam0_eot": 29,
+            "soc_evt_i2c1_rx": 10,
+            "soc_evt_adv_timer3": 41,
+            "soc_evt_cam0": 14,
+            "soc_evt_hyper0_rx": 4,
+            "soc_evt_cluster_not_busy": 34,
+            "soc_evt_spim0_tx": 1,
+            "soc_evt_adv_timer0": 38,
+            "soc_evt_uart0_tx": 7,
+            "soc_evt_ref_clock": 56
+          },
+          "l2_shared_0": {
+            "vp_ports": [
+              "input"
+            ],
+            "size": 114688,
+            "vp_class": "memory/memory"
+          },
+          "vp_class": "pulp/soc",
+          "l2_priv0": {
+            "map_base": "0x1C000000",
+            "vp_ports": [
+              "input"
+            ],
+            "vp_class": "memory/memory",
+            "size": 32768,
+            "map_size": "0x00008000"
+          },
+          "apb_ico": {
+            "vp_ports": [
+              "stdout",
+              "fll",
+              "fll1",
+              "fll2",
+              "udma",
+              "soc_eu",
+              "apb_soc_ctrl",
+              "fc_itc",
+              "fc_timer",
+              "fc_dbg_unit",
+              "rom",
+              "pmu",
+              "input"
+            ],
+            "bandwidth": 4,
+            "mappings": {
+              "pmu": {
+                "base": "0x1A107000",
+                "remove_offset": "0x1A107000",
+                "size": "0x00000800"
+              },
+              "udma": {
+                "base": "0x1A102000",
+                "remove_offset": "0x1A102000",
+                "size": "0x00002000"
+              },
+              "stdout": {
+                "base": "0x1A10F000",
+                "remove_offset": "0x1A10F000",
+                "size": "0x00001000"
+              },
+              "soc_eu": {
+                "base": "0x1A106000",
+                "remove_offset": "0x1A106000",
+                "size": "0x00001000"
+              },
+              "rom": {
+                "base": "0x1A000000",
+                "remove_offset": "0x1A000000",
+                "size": "0x00002000"
+              },
+              "gpio": {
+                "base": "0x1A101000",
+                "remove_offset": "0x1A101000",
+                "size": "0x00001000"
+              },
+              "fll2": {
+                "base": "0x1A100020",
+                "remove_offset": "0x1A100020",
+                "size": "0x00000010"
+              },
+              "fc_dbg_unit": {
+                "base": "0x1A110000",
+                "remove_offset": "0x1A110000",
+                "size": "0x00008000"
+              },
+              "fll1": {
+                "base": "0x1A100010",
+                "remove_offset": "0x1A100010",
+                "size": "0x00000010"
+              },
+              "fll": {
+                "base": "0x1A100000",
+                "remove_offset": "0x1A100000",
+                "size": "0x00000010"
+              },
+              "fc_timer": {
+                "base": "0x1A10B000",
+                "remove_offset": "0x1A10B000",
+                "size": "0x00001000"
+              },
+              "fc_debug": {
+                "base": "0x1A110000",
+                "remove_offset": "0x1A110000",
+                "size": "0x00008000"
+              },
+              "fc_itc": {
+                "base": "0x1A109800",
+                "remove_offset": "0x1A109800",
+                "size": "0x00000800"
+              },
+              "apb_soc_ctrl": {
+                "base": "0x1A104000",
+                "remove_offset": "0x1A104000",
+                "size": "0x00001000"
+              }
+            },
+            "vp_class": "interco/router",
+            "latency": 0,
+            "id": 0
+          },
+          "l2": {
+            "map_base": "0x1C000000",
+            "nb_shared_banks": 4,
+            "is_partitioned": true,
+            "map_size": "0x00080000"
+          },
+          "fll1": {
+            "vp_ports": [
+              "input"
+            ],
+            "archi_files": [
+              "archi/fll/fll_v1.h"
+            ],
+            "version": 1,
+            "vp_class": "pulp/fll/fll_v1",
+            "hal_files": [
+              "hal/fll/fll_v1.h"
+            ]
+          },
+          "l2_shared_2": {
+            "vp_ports": [
+              "input"
+            ],
+            "size": 114688,
+            "vp_class": "memory/memory"
+          },
+          "peripherals_base": "0x1A100000",
+          "fll_ctrl": {
+            "gv_class": "pulp.Fll_ctrl.fll_ctrl",
+            "version": null,
+            "vp_class": "pulp/fll/fll_ctrl"
+          },
+          "nb_cluster": 1,
+          "vp_bindings": [
+            [
+              "self->cluster_clock",
+              "cluster->clock"
+            ],
+            [
+              "self->cpi0",
+              "udma->cpi0"
+            ],
+            [
+              "self->jtag0",
+              "adv_dbg_unit->jtag"
+            ],
+            [
+              "axi_ico->cluster",
+              "cluster->input"
+            ],
+            [
+              "axi_ico->soc",
+              "soc_ico->axi_slave"
+            ],
+            [
+              "soc_ico->apb",
+              "apb_ico->input"
+            ],
+            [
+              "soc_ico->axi_master",
+              "axi_ico->input"
+            ],
+            [
+              "soc_ico->l2_shared_0",
+              "l2_shared_0->input"
+            ],
+            [
+              "soc_ico->l2_shared_1",
+              "l2_shared_1->input"
+            ],
+            [
+              "soc_ico->l2_shared_2",
+              "l2_shared_2->input"
+            ],
+            [
+              "soc_ico->l2_shared_3",
+              "l2_shared_3->input"
+            ],
+            [
+              "soc_ico->l2_priv0",
+              "l2_priv0->input"
+            ],
+            [
+              "soc_ico->l2_priv1",
+              "l2_priv1->input"
+            ],
+            [
+              "apb_ico->stdout",
+              "stdout->input"
+            ],
+            [
+              "apb_ico->fll",
+              "fll->input"
+            ],
+            [
+              "apb_ico->fll1",
+              "fll1->input"
+            ],
+            [
+              "apb_ico->fll2",
+              "fll2->input"
+            ],
+            [
+              "apb_ico->udma",
+              "udma->input"
+            ],
+            [
+              "apb_ico->soc_eu",
+              "soc_eu->input"
+            ],
+            [
+              "apb_ico->apb_soc_ctrl",
+              "apb_soc_ctrl->input"
+            ],
+            [
+              "apb_ico->fc_itc",
+              "fc_itc->input"
+            ],
+            [
+              "apb_ico->fc_timer",
+              "timer->input"
+            ],
+            [
+              "apb_ico->fc_dbg_unit",
+              "fc->dbg_unit"
+            ],
+            [
+              "apb_ico->rom",
+              "rom->input"
+            ],
+            [
+              "apb_ico->pmu",
+              "pmu->input"
+            ],
+            [
+              "fc->fetch",
+              "soc_ico->fc_fetch"
+            ],
+            [
+              "fc->data",
+              "soc_ico->fc_data"
+            ],
+            [
+              "fc->irq_ack",
+              "fc_itc->irq_ack"
+            ],
+            [
+              "plt_loader->out",
+              "soc_ico->debug"
+            ],
+            [
+              "fc_itc->irq_req",
+              "fc->irq_req"
+            ],
+            [
+              "apb_soc_ctrl->bootaddr",
+              "fc->bootaddr"
+            ],
+            [
+              "apb_soc_ctrl->event",
+              "soc_eu->event_in"
+            ],
+            [
+              "apb_soc_ctrl->cluster_power_irq",
+              "fc_itc->in_event_22"
+            ],
+            [
+              "apb_soc_ctrl->cluster_clock_gate_irq",
+              "fc_itc->in_event_23"
+            ],
+            [
+              "timer->irq_itf_0",
+              "fc_itc->in_event_10"
+            ],
+            [
+              "timer->irq_itf_1",
+              "fc_itc->in_event_11"
+            ],
+            [
+              "soc_eu->fc_event_itf",
+              "fc_itc->soc_event"
+            ],
+            [
+              "udma->l2_itf",
+              "soc_ico->udma_tx"
+            ],
+            [
+              "udma->event_itf",
+              "soc_eu->event_in"
+            ],
+            [
+              "udma->spim0",
+              "self->spim0"
+            ],
+            [
+              "udma->spim1",
+              "self->spim1"
+            ],
+            [
+              "udma->hyper0",
+              "self->hyper0"
+            ],
+            [
+              "udma->uart0",
+              "self->uart0"
+            ],
+            [
+              "cluster->dma_irq",
+              "fc_itc->in_event_8"
+            ],
+            [
+              "cluster->soc",
+              "axi_ico->input"
+            ],
+            [
+              "adv_dbg_unit->io",
+              "soc_ico->debug"
+            ]
+          ],
+          "apb_soc_ctrl": {
+            "vp_ports": [
+              "bootaddr",
+              "event",
+              "cluster_power_irq",
+              "cluster_clock_gate_irq",
+              "input"
+            ],
+            "cluster_clock_gate_event": 35,
+            "vp_class": "pulp/chips/wolfe/apb_soc",
+            "regmap": {
+              "padfun2": {
+                "offset": "0x018"
+              },
+              "padcfg1": {
+                "offset": "0x024"
+              },
+              "padcfg0": {
+                "offset": "0x020"
+              },
+              "corestatus": {
+                "offset": "0xA0"
+              },
+              "sleep_ctrl": {
+                "offset": "0x7C"
+              },
+              "padcfg10": {
+                "offset": "0x048"
+              },
+              "padcfg9": {
+                "offset": "0x044"
+              },
+              "clk_div_per": {
+                "offset": "0xDC"
+              },
+              "clk_sel": {
+                "offset": "0xD0"
+              },
+              "padcfg14": {
+                "offset": "0x058"
+              },
+              "padcfg8": {
+                "offset": "0x040"
+              },
+              "clusiso": {
+                "offset": "0x000C"
+              },
+              "padfun3": {
+                "offset": "0x01C"
+              },
+              "padcfg3": {
+                "offset": "0x02C"
+              },
+              "clusbusy": {
+                "offset": "0x6C"
+              },
+              "padcfg11": {
+                "offset": "0x04C"
+              },
+              "padcfg15": {
+                "offset": "0x05C"
+              },
+              "padcfg7": {
+                "offset": "0x03C"
+              },
+              "padcfg4": {
+                "offset": "0x030"
+              },
+              "padcfg13": {
+                "offset": "0x054"
+              },
+              "padcfg2": {
+                "offset": "0x028"
+              },
+              "padcfg12": {
+                "offset": "0x050"
+              },
+              "cs_ro": {
+                "offset": "0xC0"
+              },
+              "clk_div_clu": {
+                "offset": "0xD8"
+              },
+              "jtagreg": {
+                "offset": "0x74"
+              },
+              "info": {
+                "offset": "0x000"
+              },
+              "fcboot": {
+                "offset": "0x004"
+              },
+              "clk_div_soc": {
+                "offset": "0xD4"
+              },
+              "bootsel": {
+                "offset": "0xC4"
+              },
+              "l2_sleep": {
+                "offset": "0x78"
+              },
+              "padcfg6": {
+                "offset": "0x038"
+              },
+              "padfun1": {
+                "offset": "0x014"
+              },
+              "padcfg5": {
+                "offset": "0x034"
+              },
+              "fcfetch": {
+                "offset": "0x008"
+              },
+              "padfun0": {
+                "offset": "0x010"
+              }
+            },
+            "cluster_power_event": 31,
+            "version": 3,
+            "hal_files": [
+              "hal/apb_soc/apb_soc_v3.h"
+            ]
+          },
+          "vp_comps": [
+            "axi_ico",
+            "soc_ico",
+            "pmu",
+            "apb_ico",
+            "fc_ico",
+            "fc",
+            "l2",
+            "l2_priv0",
+            "l2_priv1",
+            "l2_shared",
+            "l2_shared_0",
+            "l2_shared_1",
+            "l2_shared_2",
+            "l2_shared_3",
+            "rom",
+            "plt_loader",
+            "fc_itc",
+            "fll",
+            "fll1",
+            "fll2",
+            "fll_ctrl",
+            "apb_soc_ctrl",
+            "stdout",
+            "gpio",
+            "timer",
+            "soc_eu",
+            "udma",
+            "uart",
+            "fc_debug",
+            "cluster",
+            "adv_dbg_unit"
+          ],
+          "fc_ico": {
+            "l2_alias": true
+          }
+        },
+        "padframe": {
+          "vp_ports": [
+            "jtag0",
+            "cpi0",
+            "clock",
+            "spim0",
+            "uart0",
+            "hyper",
+            "uart0_pad",
+            "jtag0_pad",
+            "cpi0_pad"
+          ],
+          "vp_class": "pulp/padframe/padframe_v1",
+          "default_profile": "default",
+          "groups": {
+            "cpi0": {
+              "type": "cpi",
+              "is_slave": true
+            },
+            "uart0": {
+              "is_master": true,
+              "type": "uart"
+            },
+            "jtag0": {
+              "type": "jtag",
+              "is_slave": true
+            },
+            "spim0": {
+              "is_master": true,
+              "type": "qspim"
+            },
+            "hyper": {
+              "is_master": true,
+              "type": "hyper",
+              "nb_cs": 2
+            }
+          },
+          "pads": {
+            "pad_spim0_sck": {
+              "id": 6,
+              "alternates": [
+                {
+                  "groups": [
+                    "spim0"
+                  ],
+                  "name": "spim0_sck"
+                },
+                {},
+                {},
+                {}
+              ],
+              "position": null
+            },
+            "pad_spim0_sdio1 (miso)": {
+              "id": 1,
+              "alternates": [
+                {
+                  "groups": [
+                    "spim0"
+                  ],
+                  "name": "spim0_sdio1"
+                },
+                {},
+                {},
+                {}
+              ],
+              "position": null
+            },
+            "pad_spim0_sdio3": {
+              "id": 3,
+              "alternates": [
+                {
+                  "groups": [
+                    "spim0"
+                  ],
+                  "name": "spim0_sdio3"
+                },
+                {},
+                {},
+                {}
+              ],
+              "position": null
+            },
+            "pad_spim0_sdio0 (mosi)": {
+              "id": 0,
+              "alternates": [
+                {
+                  "groups": [
+                    "spim0"
+                  ],
+                  "name": "spim0_sdio0"
+                },
+                {},
+                {},
+                {}
+              ],
+              "position": null
+            },
+            "pad_spim0_sdio2": {
+              "id": 2,
+              "alternates": [
+                {
+                  "groups": [
+                    "spim0"
+                  ],
+                  "name": "spim0_sdio2"
+                },
+                {},
+                {},
+                {}
+              ],
+              "position": null
+            },
+            "pad_spim0_csn1": {
+              "id": 5,
+              "alternates": [
+                {
+                  "groups": [
+                    "spim0"
+                  ],
+                  "name": "spim0_cs1"
+                },
+                {},
+                {},
+                {}
+              ],
+              "position": null
+            },
+            "pad_uart_tx": {
+              "id": 7,
+              "alternates": [
+                {
+                  "groups": [
+                    "uart0"
+                  ],
+                  "name": "uart_tx"
+                },
+                {},
+                {},
+                {}
+              ],
+              "position": null
+            },
+            "pad_uart_rx": {
+              "id": 8,
+              "alternates": [
+                {
+                  "groups": [
+                    "uart0"
+                  ],
+                  "name": "uart_rx"
+                },
+                {},
+                {},
+                {}
+              ],
+              "position": null
+            },
+            "pad_spim0_csn0": {
+              "id": 4,
+              "alternates": [
+                {
+                  "groups": [
+                    "spim0"
+                  ],
+                  "name": "spim0_cs0"
+                },
+                {},
+                {},
+                {}
+              ],
+              "position": null
+            }
+          },
+          "profiles": {
+            "default": {
+              "alternates": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          "nb_alternate": 4,
+          "version": 1
+        },
+        "boot_from_rom": false,
+        "hal_files": [
+          "hal/chips/wolfe/pulp.h"
+        ],
+        "vp_ports": [
+          "uart0",
+          "jtag0",
+          "ctrl",
+          "jtag0_pad",
+          "cpi0_pad",
+          "cpi0"
+        ],
+        "pulp_chip_version": 0,
+        "archi_files": [
+          "archi/chips/wolfe/pulp.h",
+          "archi/chips/wolfe/memory_map.h",
+          "archi/chips/wolfe/properties.h",
+          "archi/chips/wolfe/apb_soc.h"
+        ],
+        "name": "wolfe",
+        "vp_comps": [
+          "padframe",
+          "soc_clock",
+          "soc"
+        ],
+        "vp_bindings": [
+          [
+            "padframe->jtag0",
+            "soc->jtag0"
+          ],
+          [
+            "padframe->cpi0",
+            "soc->cpi0"
+          ],
+          [
+            "soc_clock->out",
+            "padframe->clock"
+          ],
+          [
+            "soc_clock->out",
+            "soc->clock"
+          ],
+          [
+            "soc->spim0",
+            "padframe->spim0"
+          ],
+          [
+            "soc->uart0",
+            "padframe->uart0"
+          ],
+          [
+            "soc->hyper",
+            "padframe->hyper"
+          ],
+          [
+            "self->jtag0_pad",
+            "padframe->jtag0_pad"
+          ],
+          [
+            "self->cpi0_pad",
+            "padframe->cpi0_pad"
+          ],
+          [
+            "padframe->uart0_pad",
+            "self->uart0"
+          ]
+        ]
+      },
+      "tb_comps": [
+        "jtag_proxy",
+        "uart",
+        "camera"
+      ],
+      "dpi_clock": {
+        "vp_ports": [
+          "out"
+        ],
+        "vp_class": "vp/clock_domain",
+        "frequency": 50000000
+      },
+      "tb_bindings": [
+        [
+          "chip->uart0",
+          "uart->uart"
+        ],
+        [
+          "chip->jtag0",
+          "jtag_proxy->jtag"
+        ],
+        [
+          "chip->ctrl",
+          "jtag_proxy->ctrl"
+        ],
+        [
+          "camera->cpi",
+          "chip->cpi0"
+        ]
+      ],
+      "uart": {
+        "vp_ports": [
+          "uart"
+        ],
+        "tx_file": "tx_uart.log",
+        "baudrate": 625000,
+        "stdout": false,
+        "loopback": true,
+        "type": "dpi",
+        "verbose": false,
+        "module": "uart.so"
+      },
+      "pulp_chip": {
+        "wolfe": {}
+      },
+      "dpi": {
+        "vp_ports": [
+          "clock",
+          "jtag0",
+          "cpi0",
+          "uart0"
+        ],
+        "vp_class": "utils/dpi_wrapper"
+      },
+      "vp_comps": [
+        "chip",
+        "dpi_clock",
+        "pulp_chip",
+        "dpi"
+      ],
+      "vp_bindings": [
+        [
+          "dpi_clock->out",
+          "dpi->clock"
+        ],
+        [
+          "chip->uart0",
+          "dpi->uart0"
+        ],
+        [
+          "dpi->jtag0",
+          "chip->jtag0_pad"
+        ],
+        [
+          "dpi->cpi0",
+          "chip->cpi0_pad"
+        ]
+      ]
+    },
+    "vp_comps": [
+      "board"
+    ],
+    "vp_class": "pulp/system",
+    "debug_bridge": {
+      "boot-mode": "jtag",
+      "commands": "load ioloop reqloop start wait",
+      "cable": {
+        "tap": 0,
+        "access_timeout_us": 1000000,
+        "ftdi": {},
+        "jtag-proxy": {
+          "port": 37539
+        },
+        "type": "jtag-proxy",
+        "autorun": false,
+        "active": false
+      },
+      "adv_dbg_unit": {
+        "debug_ir": "0x4",
+        "retry_count": 10,
+        "check_errors": true
+      },
+      "gdb_commands": "load ioloop reqloop start gdb wait"
+    }
+  },
+  "pulp_compiler": {
+    "llvm": {},
+    "gcc": {},
+    "default": "gcc"
+  },
+  "gvsoc": {
+    "trace-level": "trace",
+    "trace": [],
+    "werror": "True",
+    "pdb-no-break": "True",
+    "trace-file": "stdout",
+    "cycles_to_seconds": "int(max(cycles * nb_cores / 5000000, 600))",
+    "load-binary": [],
+    "vcd": {
+      "gtkw": false,
+      "files": [],
+      "all": true,
+      "help": {
+        "gtkw": "Generate script for Gtkwave.",
+        "all": "Activate all VCD traces.",
+        "active": "Activate VCD tracing."
+      },
+      "active": false
+    },
+    "event": []
+  },
+  "gdb": {
+    "active": false
+  },
+  "pulp_rt_version": {
+    "release": {},
+    "bench": {},
+    "debug": {},
+    "profile0": {},
+    "default": "bench",
+    "profile1": {}
+  },
+  "pulp_omp_version": {
+    "default": "libgomp",
+    "libgomp": {},
+    "new": {}
+  },
+  "rt": {
+    "io": true,
+    "openmp": true,
+    "werror": true,
+    "assert": false,
+    "iodev": "default",
+    "type": "pulp-rt",
+    "stack_size": 2048,
+    "no-crt0": false,
+    "no-link-script": false,
+    "openmp-rt": "pulp-rt",
+    "cl_slave_stack_size": 1024,
+    "iodevs": {
+      "uart": {
+        "channel": "0",
+        "baudrate": "625000",
+        "value": "1"
+      },
+      "default": {
+        "value": "0"
+      }
+    },
+    "start-all": "true",
+    "traces": "all",
+    "version": "bench",
+    "trace": false,
+    "no-rt": false,
+    "cl_master_stack_size": 1024,
+    "trace_level": 0,
+    "libc": false,
+    "cluster-start": "true",
+    "mode": "rt",
+    "user-sections": [],
+    "warnings": true
+  },
+  "vsim": {
+    "tcl_args": [],
+    "args": [
+      "-novopt"
+    ],
+    "gui": false,
+    "help": {
+      "script": "Specify the script used to launch the platform",
+      "gui": "Open modelsim using the GUI.",
+      "simchecker": "Activate instruction checking through golden model."
+    },
+    "script": "run.tcl",
+    "simchecker": false
+  },
+  "platform": "gvsoc",
+  "dpi_models": {
+    "uart_loopback": {
+      "baudrate": 625000,
+      "stdout": true,
+      "loopback": true,
+      "ports": {
+        "in": {
+          "itf": 0,
+          "type": "uart"
+        }
+      },
+      "tx_file": "tx_uart.log",
+      "module": "uart_tb.so"
+    }
+  },
+  "runner": {
+    "help": {
+      "py-stack": "Display the full python stack in case an exception is caught"
+    },
+    "flash_slm_file": "slm_files/flash_stim.slm",
+    "py-stack": false,
+    "active_tb_comps": [],
+    "rtl_simulator": "vsim",
+    "use_tb_comps": false,
+    "boot-mode": "rom",
+    "use_external_tb": false,
+    "boot_from_flash": true,
+    "flash_type": "spi",
+    "aes_key": "12345678275689075642768987654345",
+    "simulator": null,
+    "aes_iv": "0987654323456789",
+    "verbose": false
+  },
+  "testbench": {
+    "use_dpi": false
+  },
+  "vp_comps": [
+    "system_tree"
+  ]
+}

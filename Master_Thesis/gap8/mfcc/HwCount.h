@@ -1,0 +1,38 @@
+#ifndef __HW_COUNTER_H__
+
+#define __HW_COUNTER_H__
+
+#define HW_COUNT_ON		0x2
+#define HW_COUNT_OFF		0x0
+
+#define HW_COUNT_SAT		0x1
+#define HW_COUNT_NOSAT		0x0
+
+
+#define HW_COUNT_BASE_OFFSET	0x780
+#define HW_COUNT_EN_COUNTERS	0x7A0
+#define HW_COUNT_MODE_COUNTERS	0x7A1
+
+#define HW_COUNT_MODE_ON	0x2
+#define HW_COUNT_MODE_SAT	0x1
+
+#define HW_COUNT_CYCLES		0
+#define HW_COUNT_INSTR		1
+#define HW_COUNT_LD_STALL	2
+#define HW_COUNT_JR_STALL	3
+#define HW_COUNT_IMISS		4
+#define HW_COUNT_LD		5
+#define HW_COUNT_ST		6
+#define HW_COUNT_JUMP		7
+#define HW_COUNT_BRANCH		8
+#define HW_COUNT_BTAKEN		9
+#define HW_COUNT_RVC		10
+#define HW_COUNT_LD_EXT		11
+#define HW_COUNT_ST_EXT		12
+#define HW_COUNT_LD_EXT_CYC	13
+#define HW_COUNT_ST_EXT_CYC	14
+#define HW_COUNT_TCDM_COUNT	15
+#define HW_COUNT_ALL		0x0FFFF
+#define HW_COUNT_WRITE_ALL	31
+
+#endif
