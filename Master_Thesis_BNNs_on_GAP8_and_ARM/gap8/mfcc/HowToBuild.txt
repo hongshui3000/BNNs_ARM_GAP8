@@ -1,7 +1,0 @@
-Twiddles and SwapTables:
-------------------------
-
-
-gcc -o GenTables GenTwid_Swap.c -lm
-
-
