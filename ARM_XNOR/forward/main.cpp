@@ -67,11 +67,11 @@ const int IMG_WIDTH = 400;
 #ifdef TestFix32
 //#include "model_optimize_fp32.dat"
 //#include "model_mymodel_32f.dat"
-//#include "model_mymodel_32f_07_01.dat"
+#include "model_mymodel_32f_07_01.dat"
 //#include "model_mymodel_32f_07_05.dat"
 //#include "model_mymodel_32f_07_01_shift16.dat"  //the model data in Q7.16 resolution
 //#include "model_mymodel_32f_07_01_shift12.dat"  //the model data in Q7.12 resolution
-#include "model_mymodel_32f_07_01_shift10.dat"    //the model data in Q7.10 resolution
+//#include "model_mymodel_32f_07_01_shift10.dat"    //the model data in Q7.10 resolution
 //#include "model_mymodel_32f_07_01_shift9.dat"   //the model data in Q7.9  resolution
 //#include "model_mymodel_32f_07_01_shift8.dat"
 #else

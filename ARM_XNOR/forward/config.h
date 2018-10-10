@@ -55,15 +55,15 @@
     #ifdef TestFix32
 		#define INPUTSCALE  20
 		//#define INPUTSCALE  0
-		#define FIXSCALE    10
-		//#define FIXVALUE    1048576.0
+		#define FIXSCALE    20
+		#define FIXVALUE    1048576.0
 		//#define FIXVALUE    65536.0 //Q16
 		//#define FIXVALUE    4096.0
-		#define FIXVALUE    1024.0
+		//#define FIXVALUE    1024.0
 		//#define FIXVALUE    512.0 //Q9
 		//#define FIXVALUE     256.0
     #endif
-#define Testaccuracy
+//#define Testaccuracy
 #endif
 
 /*-------------------------------------------

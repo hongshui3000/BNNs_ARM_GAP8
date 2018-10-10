@@ -96,7 +96,7 @@ void FirstLayer(Model *net, int32_t nFilters,
 	read(gamma2, net->fData, nFilters, net->fPos);
 	read(beta2, net->fData, nFilters, net->fPos);
 #endif
-
+/*
 	for(int kkk=0; kkk<nFilters; kkk++)
     {   if(bias[kkk]>1 || bias[kkk]<-1)
 		printf("bias = %f\n",bias[kkk]);}
@@ -127,6 +127,7 @@ void FirstLayer(Model *net, int32_t nFilters,
 	for(int kkk=0; kkk<nFilters; kkk++)
     {   if(beta2[kkk]>1 || beta2[kkk]<-1)
 		printf("beta2 = %f\n",beta2[kkk]);}
+*/
 #if defined (data_optimized) || defined(signGamma_signBetaStar_optimized)
 #else
 	for(i = 0; i < nFilters; i++){
